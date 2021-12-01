@@ -1,0 +1,8 @@
+# INFO
+This puzzle solution is implemented in Rust (www.rust-lang.org), using cargo-script (https://github.com/DanielKeep/cargo-script).
+
+# HOW TO USE
+- Install rust and cargo-script.
+- Download the input to a file named `input` (https://adventofcode.com/2021/day/1/input).
+- Run puzzle_1_answer.sh to get the anser to the first puzzle.
+- Run puzzle_2_answer.sh to get the anser to the second puzzle.
