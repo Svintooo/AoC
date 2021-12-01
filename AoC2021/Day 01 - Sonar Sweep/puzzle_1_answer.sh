@@ -5,4 +5,4 @@ cd "$dir"
 
 
 # Puzzle Solution
-./depth_increase_counter.crs input
+cargo script depth_increase_counter.crs input
