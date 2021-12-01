@@ -1,0 +1,135 @@
+#!/usr/bin/env run-cargo-script
+//! asdf
+//!
+//! ```cargo
+//! [dependencies]
+//! ```
+// std::path::PathBuf
+
+// WARNING: Ugly code !!!
+//          I DON'T KNOW HOW TO CODE IN RUST !!!
+
+use std::env;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
+
+// compare_mode: simple, three-measurement-window
+fn main() {
+  let input_file = std::env::args().nth(1).expect("Input file not specified");
+  //let compare_mode = std::env::args().nth(2).expect("Compare mode not specified");
+  //println!("Input file: {:}", input_file);
+
+  let mut increase_count = 0;
+
+  let file = File::open(input_file).unwrap();
+  let reader = BufReader::new(file);
+
+  let mut prev_depth = 0;
+
+  let mut depths_A = [0,0,0];
+  let mut depths_B = [0,0,0];
+  let mut depths_C = [0,0,0];
+
+  let mut index_A = 0;
+  let mut index_B = 0;
+  let mut index_C = 0;
+
+  let mut trigger_B = 1;
+  let mut trigger_C = 2;
+
+  let mut skip_compare = true;
+
+  for (index, line) in reader.lines().enumerate() {
+    let line = line.unwrap();
+    let depth = line.parse::<i32>().unwrap();
+    let mut depth_sum = 0;
+
+    //println!("{:>6}: {}", index, depth);
+    let mut summed_A = false;
+    let mut summed_B = false;
+    let mut summed_C = false;
+
+    let mut depth_increased = false;
+
+
+    println!("prev_depth: {}", prev_depth);
+
+
+    // Window A
+    depths_A[index_A] = depth;
+    index_A += 1;
+
+    if index_A >= 3 {
+      summed_A = true;
+      depth_sum = depths_A[0] + depths_A[1] + depths_A[2];
+      //println!("A: {}", depth_sum);
+      index_A = 0;
+      if skip_compare {
+        skip_compare = false;
+      } else {
+        if depth_sum > prev_depth {
+          increase_count += 1;  // <-------------------------------------------
+          depth_increased = true;
+        }
+      }
+      prev_depth = depth_sum;
+    }
+
+
+    // Window B
+    //println!("B: index({}) depths({:?}) trigger({})", index_B, depths_B, trigger_B);
+    if trigger_B <= 0 {
+      depths_B[index_B] = depth;
+      index_B += 1;
+    } else {
+      trigger_B -= 1;
+    }
+
+    if index_B >= 3 {
+      summed_B = true;
+      depth_sum = depths_B[0] + depths_B[1] + depths_B[2];
+      //println!("B: {}", depth_sum);
+      index_B = 0;
+      if depth_sum > prev_depth {
+        increase_count += 1;  // <---------------------------------------------
+        depth_increased = true;
+      }
+      prev_depth = depth_sum;
+    }
+
+
+    // Window C
+    //println!("C: index({}) depths({:?}) trigger({})", index_C, depths_C, trigger_C);
+    if trigger_C <= 0 {
+      depths_C[index_C] = depth;
+      index_C += 1;
+    } else {
+      trigger_C -= 1;
+    }
+
+    if index_C >= 3 {
+      summed_C = true;
+      depth_sum = depths_C[0] + depths_C[1] + depths_C[2];
+      //println!("C: {}", depth_sum);
+      index_C = 0;
+      if depth_sum > prev_depth {
+        increase_count += 1;  // <---------------------------------------------
+        depth_increased = true;
+      }
+      prev_depth = depth_sum;
+    }
+
+    // END
+    println!("A: index({}) depths({:?})", index_A, depths_A);
+    println!("B: index({}) depths({:?})", index_B, depths_B);
+    println!("C: index({}) depths({:?})", index_C, depths_C);
+    if summed_A { println!("sum_A: {}", depth_sum); depths_A[0]=0;depths_A[1]=0;depths_A[2]=0; }//DEBUG
+    if summed_B { println!("sum_B: {}", depth_sum); depths_B[0]=0;depths_B[1]=0;depths_B[2]=0; }//DEBUG
+    if summed_C { println!("sum_C: {}", depth_sum); depths_C[0]=0;depths_C[1]=0;depths_C[2]=0; }//DEBUG
+    if depth_increased { println!("DEPTH INCREASE"); }
+    println!();
+  }
+
+  //println!("Depth increases: {}", increase_count);
+  println!("Anser: {}", increase_count);
+}
