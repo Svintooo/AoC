@@ -5,4 +5,5 @@ cd "$dir"
 
 
 # Puzzle Solution
-cargo script depth_increase_counter.crs input
+answer="$( cargo script depth_increase_counter.crs input )"
+echo "Answer: ${answer}"
