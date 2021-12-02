@@ -33,5 +33,5 @@ fn main() {
   }
 
   let answer = horizontal * depth;
-  println!("Answer: {}", answer);
+  println!("{}", answer);
 }
