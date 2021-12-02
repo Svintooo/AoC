@@ -1,5 +1,5 @@
 # INFO
-This puzzle solution is implemented in Rust (www.rust-lang.org), using cargo-script (https://github.com/DanielKeep/cargo-script).
+This puzzle solution is implemented in Rust (www.rust-lang.org), using rust-script (https://rust-script.org/).
 
 # HOW TO USE
 - Install rust and cargo-script.
