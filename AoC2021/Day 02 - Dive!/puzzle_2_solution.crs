@@ -20,10 +20,10 @@ fn main() {
   let mut aim        = 0;
 
   for (index, line) in reader.lines().enumerate() {
-    let line = line.unwrap();
+    let line      = line.unwrap();
     let mut split = line.split_whitespace();
     let direction = split.next().expect("String");
-    let units = split.next().expect("Integer").parse::<i32>().unwrap();
+    let units     = split.next().expect("Integer").parse::<i32>().unwrap();
 
     match direction {
       "forward" => { horizontal += units;

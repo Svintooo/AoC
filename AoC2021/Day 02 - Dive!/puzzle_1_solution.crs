@@ -19,15 +19,15 @@ fn main() {
   let mut depth = 0;
 
   for (index, line) in reader.lines().enumerate() {
-    let line = line.unwrap();
+    let line      = line.unwrap();
     let mut split = line.split_whitespace();
     let direction = split.next().expect("String");
-    let distance = split.next().expect("Integer").parse::<i32>().unwrap();
+    let distance  = split.next().expect("Integer").parse::<i32>().unwrap();
 
     match direction {
       "forward" => horizontal += distance,
-      "down"    => depth += distance,
-      "up"      => depth -= distance,
+      "down"    => depth      += distance,
+      "up"      => depth      -= distance,
       _         => println!("Input Error: {}:{}", index, line),
     }
   }
