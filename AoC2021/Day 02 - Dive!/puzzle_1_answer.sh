@@ -5,5 +5,5 @@ cd "$dir"
 
 
 # Puzzle Solution
-answer="$( rust-script puzzle_1_solution.crs input )"
+answer="$( rust-script puzzle_1_solution.ers input )"
 echo "Answer: ${answer}"

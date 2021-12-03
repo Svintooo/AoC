@@ -5,5 +5,5 @@ cd "$dir"
 
 
 # Puzzle Solution
-answer="$( cargo script depth_increase_counter_w_measurement_window.crs input )"
+answer="$( cargo script depth_increase_counter_w_measurement_window.ers input )"
 echo "Answer: ${answer}"
