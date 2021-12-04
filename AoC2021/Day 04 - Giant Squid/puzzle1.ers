@@ -10,58 +10,66 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-fn main() {
+fn read_line(&mut reader: &mut BufReader<File>) -> String {
+  let string = String::new();
+  reader.read_line(&mut string);  // read_line() SHOULD RETURN String NOT int WAT IS THIS C-STYLE CRAP I SHOULD BE ABLE TO WRITE ALL THIS IN ONE LINE `return reader.read_line();` WTF !?!?!?!
+  return string;
+}
+
+fn main() -> std::io::Result<()> {
   let input_file = std::env::args().nth(1).expect("Input file not specified");
-  let file = File::open(input_file).unwrap();
+  let file = File::open(input_file)?;
   let reader = BufReader::new(file);
 
-  // PARSING
-  for (_index, line) in reader.lines().enumerate() {
-    let line = line.unwrap();
-  }
+  //// PARSING
+  // bingo_numbers (first row)
+  let bingo_numbers: &mut Vec<i32> = read_line(&mut reader).split(',').fold( &mut Vec::new(), |acc,str|{acc.push(str.parse::<i32>().unwrap());acc} );
 
-  // CHECK
+  //// CHECK
 
-  // CALCULATION
+  //// CALCULATION
 
-  // ANSWER
+  //// ANSWER
   let answer = 0;
   println!("{}", answer);
+
+  return Ok(());
 }
 
 
-PARSING
-  läs in rad 1
-    splitta på ','
-    spara ner i en Vec: bingo_numbers
+//PARSING
+//  läs in rad 1
+//    splitta på ','
+//    spara ner i en Vec: bingo_numbers
+//
+//  skapa en Vec: bingo_boards
+//
+//  loop
+//    skippa 1 tom rad
+//    skapa en Vec: bingo_board
+//    läs 5 rader
+//      splitta på whitespace till en vec, push:a till bingo_board
+//    push:a bingo_board till bingo_boards
+//
+//CHECK
+//  kontrollera hur man accessar ett värde
+//    förhoppningsvis med bingo_boards[i][x][y]
+//
+//
+//CALCULATION
+//  skapa en funktion: check_if_bingo()
+//    som kontrollerar om en board har fått bingo
+//    bingo: fem 0 i rad, horisontellt eller vertikalt
+//
+//  loop: bingo_number in bingo_numbers
+//    hitta alla bingo_number i bingo_boards
+//      skriv över dom med 0
+//    hitta alla bingo_board som fått 5st 0 i rad
+//      (horisontellt eller vertikalt)
+//      summera alla värden, multiplicera med bingo_number, spara i final_score
+//      let boards_got_bingo
+//        spara bingo_id
+//        spara final_score
 
-  skapa en Vec: bingo_boards
 
-  loop
-    skippa 1 tom rad
-    skapa en Vec: bingo_board
-    läs 5 rader
-      splitta på whitespace till en vec, push:a till bingo_board
-    push:a bingo_board till bingo_boards
-
-CHECK
-  kontrollera hur man accessar ett värde
-    förhoppningsvis med bingo_boards[i][x][y]
-
-
-CALCULATION
-  skapa en funktion: check_if_bingo()
-    som kontrollerar om en board har fått bingo
-    bingo: fem 0 i rad, horisontellt eller vertikalt
-
-  loop: bingo_number in bingo_numbers
-    hitta alla bingo_number i bingo_boards
-      skriv över dom med 0
-    hitta alla bingo_board som fått 5st 0 i rad
-      (horisontellt eller vertikalt)
-      summera alla värden, multiplicera med bingo_number, spara i final_score
-      let boards_got_bingo
-        spara bingo_id
-        spara final_score
-
-
+//char:is_whitespace
