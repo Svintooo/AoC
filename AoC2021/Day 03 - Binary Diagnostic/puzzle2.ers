@@ -1,0 +1,110 @@
+#!/usr/bin/env rust-script
+//!
+//!
+//! ```cargo
+//! [dependencies]
+//!
+//! ```
+
+use std::env;
+use std::fs::File;
+use std::io::{BufRead, BufReader, Seek};
+
+fn main() -> Result<(),&'static str> {
+  let input_file = env::args().nth(1).expect("Input file not specified");
+  let file = File::open(input_file).unwrap();
+  let mut reader = BufReader::new(file);
+
+
+  // Line length                                 Some(    Ok(
+  let line_length = (&mut reader).lines().nth(1).unwrap().unwrap().chars().count();
+
+
+  // Error checks
+  reader.rewind().unwrap();  // Make sure we read from the beginning of the file
+
+  for line in (&mut reader).lines() {
+    let line = line.unwrap();
+
+    if line_length != line.chars().count() {
+      return Err("All lines in input is not of same length");
+    }
+
+    if !line.chars().all(|c| c == '0' || c == '1' ) {
+      return Err("Input contains non binary characters")
+    }
+  }
+
+
+  // Binary representations
+  let mut oxygen_generator_rating = String::new();
+  let mut co2_scrubber_rating     = String::new();
+
+
+  //// Calculation loop
+  // Calculates the binary values of:
+  // - oxygen_generator_rating
+  // - co2_scrubber_rating
+  //for bit_index in iter::iterate(|i| i += 1, 0)
+  //                   .take_while(|i| i < line_length)
+  for bit_index in 0..line_length {
+    //// bit counters
+    // Count the number of
+    // ones and zeroes.         0 1
+    let mut bit_count_oxygen = [0,0];
+    let mut bit_count_co2    = [0,0];
+
+    reader.rewind().unwrap();  // Make sure we read from the beginning of the file
+
+    for (_index, line) in (&mut reader).lines().enumerate() {
+      let line = line.unwrap();
+      let bit = match line.chars().nth(bit_index).unwrap() {
+                  '0' => 0,
+                  '1' => 1,
+                   _  => panic!("Input Error"),
+                };
+
+      if line.starts_with(oxygen_generator_rating.as_str()) {
+        bit_count_oxygen[bit] += 1;
+      }
+
+      if line.starts_with(co2_scrubber_rating.as_str()) {
+        bit_count_co2[bit] += 1;
+      }
+    }
+
+    match bit_count_oxygen[1] >= bit_count_oxygen[0] {
+      true  => oxygen_generator_rating.push('1'),
+      false => oxygen_generator_rating.push('0'),
+    }
+
+    //// UGLY HACK to make the code work
+    // Example of how the code should work (1):
+    //   If one 0 is found
+    //   And two 1 is found
+    //   Then push a '0'
+    // Example of how the code should work (2):
+    //   If no 0 is found
+    //   And two 1 is found
+    //   Then push a '1'
+    // This hack makes sure that example 2 works
+    if bit_count_co2[0] == 0 { bit_count_co2[0] = 9; }
+    if bit_count_co2[1] == 0 { bit_count_co2[1] = 9; }
+
+    match bit_count_co2[0] <= bit_count_co2[1] {
+      true  => co2_scrubber_rating.push('0'),
+      false => co2_scrubber_rating.push('1'),
+    }
+
+    println!("O:{:12}  Co:{:12}", oxygen_generator_rating
+                              , co2_scrubber_rating);
+  }
+
+  let oxygen_generator_rating = isize::from_str_radix(&oxygen_generator_rating, 2).unwrap();
+  let co2_scrubber_rating     = isize::from_str_radix(&co2_scrubber_rating,     2).unwrap();
+
+  let answer = oxygen_generator_rating * co2_scrubber_rating;
+  println!("{}", answer);
+
+  return Ok(());
+}
