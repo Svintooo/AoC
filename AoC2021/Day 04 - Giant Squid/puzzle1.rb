@@ -2,42 +2,72 @@
 
 filename = ARGV[0]
 data     = IO.read(filename)
-lines    = data.split(/\n\r?|\r/)
-
-# PARSING
-bingo_numbers = lines.shift.split(',').map(&:to_i)
 
 
-#PARSING
-#  läs in rad 1
-#    splitta på ','
-#    spara ner i en Vec: bingo_numbers
-#
-#  skapa en Vec: bingo_boards
-#
-#  loop
-#    skippa 1 tom rad
-#    skapa en Vec: bingo_board
-#    läs 5 rader
-#      splitta på whitespace till en vec, push:a till bingo_board
-#    push:a bingo_board till bingo_boards
-#
-#CHECK
-#  kontrollera hur man accessar ett värde
-#    förhoppningsvis med bingo_boards[i][x][y]
-#
-#
-#CALCULATION
-#  skapa en funktion: check_if_bingo()
-#    som kontrollerar om en board har fått bingo
-#    bingo: fem 0 i rad, horisontellt eller vertikalt
-#
-#  loop: bingo_number in bingo_numbers
-#    hitta alla bingo_number i bingo_boards
-#      skriv över dom med 0
-#    hitta alla bingo_board som fått 5st 0 i rad
-#      (horisontellt eller vertikalt)
-#      summera alla värden, multiplicera med bingo_number, spara i final_score
-#      let boards_got_bingo
-#        spara bingo_id
-#        spara final_score
+## PARSING
+bingo_numbers, data = data.split(/\n\n/, 2)
+bingo_numbers = bingo_numbers.split(',').map(&:to_i)
+#p bingo_numbers #DEBUG
+
+bingo_boards = data.split(/\n\n/)
+                   .collect{|board|
+                     board.split(/\n/)
+                          .collect{|row| row.strip.split(/\s+/).collect{|n| n.to_i } }
+                   }
+#pp bingo_boards           #DEBUG
+#pp bingo_boards[1]        #DEBUG
+#pp bingo_boards[0] [1][3] #DEBUG
+#exit                      #DEBUG
+
+
+## CALCULATION
+winning_board_id = nil
+last_bingo_number = nil
+
+catch :BINGO do
+  bingo_numbers.each{|bingo_number|
+    # Mark numbers equal to bingo_number
+    bingo_boards.each do |bingo_board|
+      bingo_board.each{|row|
+        row.each_with_index{|number, row_id| row[row_id] = :x if number == bingo_number }
+      }
+    end
+
+    # Check all boards for BINGO
+    bingo_boards.each_with_index do |bingo_board, board_id|
+      column_bingo = [:x,:x,:x,:x,:x]
+
+      bingo_board.each{|row|
+        # Check if a row has BINGO
+        if row.all?{|n| n == :x}
+          winning_board_id = board_id
+          last_bingo_number = bingo_number
+          throw :BINGO
+        end
+
+        row.each_with_index{|number, row_id|
+          column_bingo[row_id] = nil if number != :x
+        }
+      }
+
+      # Check if a column has BINGO
+      if column_bingo.any?{|n| n == :x}
+        winning_board_id = board_id
+        last_bingo_number = bingo_number
+        throw :BINGO
+      end
+    end
+  }
+end
+
+#p last_bingo_number               #DEBUG
+#p winning_board_id                #DEBUG
+#pp bingo_boards[winning_board_id] #DEBUG
+
+unmarked_numbers_sum = bingo_boards[winning_board_id].flatten
+                                                     .reject{|n|n==:x}
+                                                     .sum
+#p unmarked_numbers_sum            #DEBUG
+
+answer = unmarked_numbers_sum * last_bingo_number
+puts answer
