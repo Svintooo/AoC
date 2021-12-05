@@ -39,7 +39,9 @@ vents_lines.each do |start, stop|
   end
 end
 
-pp vent_map.collect{|array| array.collect{|o| o == nil ? 0 : o} } #DEBUG
+#pp vent_map.collect{|array| array.collect{|o| o == nil ? 0 : o} } #DEBUG
 
 
 ## ANSWER
+answer = vent_map.flatten.select{|v| v >= 2 }.count
+puts answer
