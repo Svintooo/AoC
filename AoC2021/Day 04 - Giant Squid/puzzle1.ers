@@ -10,20 +10,32 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-fn read_line(&mut reader: &mut BufReader<File>) -> String {
-  let string = String::new();
-  reader.read_line(&mut string);  // read_line() SHOULD RETURN String NOT int WAT IS THIS C-STYLE CRAP I SHOULD BE ABLE TO WRITE ALL THIS IN ONE LINE `return reader.read_line();` WTF !?!?!?!
-  return string;
-}
-
 fn main() -> std::io::Result<()> {
   let input_file = std::env::args().nth(1).expect("Input file not specified");
   let file = File::open(input_file)?;
   let reader = BufReader::new(file);
+  let mut lines = reader.lines();
 
   //// PARSING
   // bingo_numbers (first row)
-  let bingo_numbers: &mut Vec<i32> = read_line(&mut reader).split(',').fold( &mut Vec::new(), |acc,str|{acc.push(str.parse::<i32>().unwrap());acc} );
+  let bingo_numbers = lines.next().unwrap().unwrap().split(',').map(|str|str.parse::<i32>().unwrap());
+  println!("{:?}", bingo_numbers);
+  let bingo_boards  = Vec::new();
+  for _ in 1..=3 {
+    // Skip one empty line
+    lines.next();
+
+    // Parse a bingo board
+    let mut bingo_board = Vec::new();
+    bingo_board.push( lines.next().unwrap().unwrap().split_whitespace().map(|str|str.parse::<i32>().unwrap()) );
+    bingo_board.push( lines.next().unwrap().unwrap().split_whitespace().map(|str|str.parse::<i32>().unwrap()) );
+    bingo_board.push( lines.next().unwrap().unwrap().split_whitespace().map(|str|str.parse::<i32>().unwrap()) );
+    bingo_board.push( lines.next().unwrap().unwrap().split_whitespace().map(|str|str.parse::<i32>().unwrap()) );
+    bingo_board.push( lines.next().unwrap().unwrap().split_whitespace().map(|str|str.parse::<i32>().unwrap()) );
+
+    // Store bingo board
+    bingo_boards.push(bingo_board);
+  }
 
   //// CHECK
 
