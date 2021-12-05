@@ -14,7 +14,7 @@ vents_lines = data.split(/\n/)
                                           .map{|xy| xy.to_i }
                               }
                   }
-pp vents_lines
+pp vents_lines #DEBUG
 
 
 ## CALCULATION
