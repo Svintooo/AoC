@@ -39,9 +39,10 @@ vents_lines.each do |start, stop|
   end
 end
 
+# the printed map has the x,y coordinates flipped lol!
 #pp vent_map.collect{|array| array.collect{|o| o == nil ? 0 : o} } #DEBUG
 
 
 ## ANSWER
-answer = vent_map.flatten.select{|v| v >= 2 }.count
+answer = vent_map.flatten.select{|v| v != nil && v >= 2 }.count
 puts answer
