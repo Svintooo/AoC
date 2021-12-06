@@ -1,0 +1,19 @@
+#
+## Solution 1 Mockup
+#
+
+# PARSING
+read input to an array of integers
+
+# CHECK
+Verify that no integer is less or equal to 0
+
+# CALCULATION
+loop 80 times
+  subtract 1 from each integer in array
+  for each 0 in array
+    - replace integer with a 6
+    - append 8 to array
+
+# ANSWER
+numbers of integers in array
