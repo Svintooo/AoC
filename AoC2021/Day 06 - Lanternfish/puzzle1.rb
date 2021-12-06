@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 filename = ARGV[0]
-data     = IO.read(filename)
+days     = ARGV[1] || 80
+
+data = IO.read(filename)
+days = days.to_i
 
 
 ## PARSING
@@ -14,8 +17,8 @@ raise "Error" if lanternfish.any?{|v| v <= 0 }
 ## CALCULATE
 #puts "Initial state: #{lanternfish.join(',')}" #DEBUG
 
-80.times.each do
-#18.times.each do |day| #DEBUG
+days.times.each do
+#days.times.each do |day| #DEBUG
   lanternfish.count.times do |i|
     if lanternfish[i] == 0
       lanternfish[i] = 6

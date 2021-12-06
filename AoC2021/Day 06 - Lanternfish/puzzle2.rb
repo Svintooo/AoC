@@ -1,11 +1,14 @@
 #!/usr/bin/env ruby
 filename = ARGV[0]
-data     = IO.read(filename)
+days     = ARGV[1] || 256
+
+data = IO.read(filename)
+days = days.to_i
 
 
 ## PARSING
-#              0 1 2 3 4 5 6 7 8
-lanternfish = [0,0,0,0,0,0,0,0,0]
+#              0 1 2 3 4 5 6 7 8   # Possible lanternfish values
+lanternfish = [0,0,0,0,0,0,0,0,0]  # Number of lanternfish that has each value
 
 data.strip.split(',')
     .map(&:to_i)
@@ -19,7 +22,7 @@ data.strip.split(',')
 ## CALCULATE
 #puts "Initial state: #{lanternfish.join(',')}" #DEBUG
 
-256.times.each do |day| #DEBUG
+days.times.each do |day| #DEBUG
   number_of_fishies = lanternfish.shift
   lanternfish << 0
 
