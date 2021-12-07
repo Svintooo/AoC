@@ -12,7 +12,7 @@ crab_subs = data.strip.split(',').map(&:to_i).sort
 
 
 ## CALCULATE
-position = crab_subs[(crab_subs.count/2).floor]  # Mean value
+position = crab_subs[(crab_subs.count/2).floor]  # Median value
 #p position #DEBUG
 
 fuel = crab_subs.map{|v| (v-position).abs }.sum
