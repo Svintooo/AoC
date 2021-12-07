@@ -18,7 +18,7 @@ position = crab_subs.map(&:to_f)
                     .to_i
 #p position #DEBUG
 
-# One of the surrounding positions of the mean value seams
+# One of the surrounding positions of the mean value seems
 # to be the most optimal one (according to my tests).
 # Though, I am not sure why this is.
 positions = [position-1, position, position+1]
@@ -34,6 +34,7 @@ fuels = positions.map{|pos|
                  }
 #p fuels
 
+# Take the most optimal fuel cost
 fuel = fuels.min
 #p fuel #DEBUG
 
