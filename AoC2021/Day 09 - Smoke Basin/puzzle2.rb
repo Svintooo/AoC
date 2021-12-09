@@ -8,7 +8,7 @@ data = ARGF.read
 ## PARSING
 heightmap = data.split(/\r\n?|\n/)
                 .map{|line| line.chars.map{|c| c.to_i } }
-pp heightmap #DEBUG
+#pp heightmap #DEBUG
 
 
 ## CALCULATE
@@ -27,24 +27,28 @@ end
 
 basin_sizes = []
 
-low_points.each do |x,y|
-  print"#";p([x,y]) #DEBUG
+low_points.each do |point|
+  #print"#";p(point) #DEBUG
 
-  f = ->(y2) {
-    tmp = 0
-    p([x,y2]);(heightmap[y2][x] == 9) ? (throw :STOP) : (tmp += 1)
-    x.-(1).downto(0)                  .each{|x2| p([x2,y2]);break if heightmap[y2][x2] == 9; tmp += 1 }
-    x.+(1).upto(heightmap[y2].count-1).each{|x2| p([x2,y2]);break if heightmap[y2][x2] == 9; tmp += 1 }
-    return tmp
-  }
+  points = []
+  visited_points = {}
 
-  size  = 0
-  #size += 1
-  catch :STOP do ( size += f.call(y) ) end
-  catch :STOP do ( size += y.-(1).downto(0)              .map{|y2| f.call(y2) }.sum ) end
-  catch :STOP do ( size += y.+(1).upto(heightmap.count-1).map{|y2| f.call(y2) }.sum ) end
+  points << point
+  basin_size  = 0
 
-  basin_sizes << size
+  while (x,y = points.shift)
+    next if heightmap[y][x] == 9
+    next if visited_points[ [x,y] ]
+    basin_size += 1
+    visited_points[ [x,y] ] = true
+
+    points << [x-1,y] if x != 0
+    points << [x+1,y] if x < heightmap[y].count-1
+    points << [x,y-1] if y != 0
+    points << [x,y+1] if y < heightmap.count-1
+  end
+
+  basin_sizes << basin_size
 end
 
 
