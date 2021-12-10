@@ -34,11 +34,15 @@ chunk_pairs = {
   ']' => '[',
   '}' => '{',
   '>' => '<',
+  '(' => ')',
+  '[' => ']',
+  '{' => '}',
+  '<' => '>',
 }
 
 incomplete_count = 0
 corrupted_count  = 0
-total_score      = 0
+scores           = []
 
 repaired_navigation_subsystem = []
 
@@ -58,6 +62,7 @@ navigation_subsystem.each do |line|
         if open_chunks.empty? || open_chunks.last != chunk_pairs[char]
           corrupted_count += 1
           corrupted = true
+          #puts" C" #DEBUG
           break
         else
           open_chunks.pop
@@ -66,17 +71,28 @@ navigation_subsystem.each do |line|
   end
   next if corrupted
 
-  if !open_chunks.enpty?
+  if !open_chunks.empty?
+    #puts" I" #DEBUG
     incomplete_count += 1
 
-    #
+    repair_chars = []
+    while char = open_chunks.pop
+      repair_char = chunk_pairs[char]
+      repair_chars << repair_char
+
+      score *= 5
+      score += score_points[repair_char]
+    end
+    scores << score
+
+    #p [repair_chars.join, score] #DEBUG"
   end
 end
-p incomplete_count #DEBUG
-p corrupted_count #DEBUG
-p total_score #DEBUG
+#p incomplete_count #DEBUG
+#p corrupted_count #DEBUG
+#p scores #DEBUG
 
 
 ## ANSWER
-answer = total_score
+answer = scores.sort[scores.count/2]
 puts answer
