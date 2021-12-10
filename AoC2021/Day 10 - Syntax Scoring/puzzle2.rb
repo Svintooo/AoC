@@ -45,6 +45,7 @@ repaired_navigation_subsystem = []
 navigation_subsystem.each do |line|
   open_chunks = []
   score = 0
+  corrupted = false
   #p line.join #DEBUG
 
   line.each do |char|
@@ -55,29 +56,25 @@ navigation_subsystem.each do |line|
       when ')',']','}','>'
         #puts"#{char.inspect}: #{open_chunks.map{|c|c.inspect}.join(",")}" #DEBUG
         if open_chunks.empty? || open_chunks.last != chunk_pairs[char]
+          corrupted_count += 1
+          corrupted = true
           break
         else
           open_chunks.pop
         end
     end
   end
+  next if corrupted
 
-  #p open_chunks #DEBUG
-  #puts"#{open_chunks.map{|c|c.inspect}.join(",")}" #DEBUG
-  if score != 0
-    #puts " C" #DEBUG
-    corrupted_count += 1
-    total_score += score
-  elsif !open_chunks.empty?
-    #puts " I" #DEBUG
+  if !open_chunks.enpty?
     incomplete_count += 1
-  end
 
-  #break #DEBUG
+    #
+  end
 end
-#p incomplete_count #DEBUG
-#p corrupted_count #DEBUG
-#p total_score #DEBUG
+p incomplete_count #DEBUG
+p corrupted_count #DEBUG
+p total_score #DEBUG
 
 
 ## ANSWER
