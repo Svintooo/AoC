@@ -30,7 +30,6 @@ flash_counts = []
 100.times do |i|
   #puts "### #{i}" #DEBUG
 
-  flash_count = 0
   will_flash = Set.new  # Cannot contain duplicates
   flashed    = []
 
@@ -46,7 +45,6 @@ flash_counts = []
   while (x,y = will_flash.shift)
     flashed << [x,y]
     octo_grid[y][x] = 0
-    flash_count += 1
     [ [x,y-1], [x,y+1], [x-1,y], [x+1,y], [x-1,y-1], [x-1,y+1], [x+1,y-1], [x+1,y+1] ].each do |x2,y2|
       next if x2<0 || y2<0 || x2>octo_grid[y].count-1 || y2>octo_grid.count-1
       next if flashed.include?([x2,y2])
@@ -56,7 +54,7 @@ flash_counts = []
     #pp octo_grid;STDIN.gets("\n") #DEBUG
   end
 
-  flash_counts << flash_count
+  flash_counts << flashed.count
 
   #puts "# Loop Final" #DEBUG
   #pp octo_grid #DEBUG
