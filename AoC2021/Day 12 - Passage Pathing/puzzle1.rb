@@ -20,9 +20,11 @@ cave_paths = data.lines.map(&:strip)
 ## HELP CODE
 class String
   def upcase?
+    # Only uppercase characters
     self.match? /\A\p{Upper}+\z/
   end
   def downcase?
+    # Only lowercase characters
     self.match? /\A\p{Lower}+\z/
   end
 end
@@ -70,5 +72,5 @@ end
 
 
 ## ANSWER
-answer = nil
+answer = cave_full_paths.count
 puts answer
