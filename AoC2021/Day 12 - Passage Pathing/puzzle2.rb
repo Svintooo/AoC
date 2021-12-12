@@ -15,7 +15,7 @@ cave_paths = data.lines.map(&:strip)
                      caves[cave_a] ||= []
                      caves[cave_a] << cave_b
                    end
-                   caves  # Last row is what is put inside the cave variable on next loop
+                   caves  # Last row is what is put inside the caves variable on next loop
                  }
 #pp cave_paths #DEBUG
 
