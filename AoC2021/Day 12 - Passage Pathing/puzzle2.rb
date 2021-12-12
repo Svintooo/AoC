@@ -31,8 +31,8 @@ class String
     self.match? /\A\p{Lower}+\z/
   end
 end
-
-
+                                                 .
+AoC2021 day12: Puzzle 2, solved (confusing code)
 ## CHECK
 # Check that all caves are not written with a mix of uppercase and lowercase characters
 raise "Input Error: Character Case" unless cave_paths.keys.all?{|cave| cave.upcase? || cave.downcase? }
@@ -46,9 +46,9 @@ cave_full_paths = []
 queued_paths    = []
 
 # Initialize queue
-#Explanation:     Travel   Small Caves   Next        Small Cave
-#                 Log      Visited       Cave        Visited Twice
-queued_paths << [ [],      [],           start_cave, false ]
+#Explanation:     Travel   Small Caves   Next         One Small Cave
+#                 Log      Visited       Cave         Visited Twice
+queued_paths << [ [],      [],           start_cave,  false ]
 
 # Find all paths
 while (travel_log, small_caves_visited, cave, small_cave_visited_twice = queued_paths.shift)  #NOTE: .pop also works
@@ -63,21 +63,31 @@ while (travel_log, small_caves_visited, cave, small_cave_visited_twice = queued_
   travel_log << cave
 
   if cave.downcase?
-    small_caves_visited = small_caves_visited.clone
-    small_caves_visited << cave
+    if small_caves_visited.include?(cave)
+      small_cave_visited_twice = true
+    else
+      small_caves_visited = small_caves_visited.clone
+      small_caves_visited << cave
+    end
   end
 
+  debug = false#travel_log.join(',') =~ /^start,A,b,A/ #DEBUG
   #p cave #DEBUG
   cave_paths[cave].each{|next_cave|
+    if debug #DEBUG
+      print"#{ small_cave_visited_twice.to_s.ljust(5).+("->").+((small_cave_visited_twice||small_caves_visited.include?(next_cave)).to_s).ljust(12) } "
+      print"#{ travel_log.+(["+"+next_cave]).join(',') } "
+      puts
+    end
     next if small_caves_visited.include?(next_cave) && small_cave_visited_twice
     next if next_cave == start_cave
-    small_cave_visited_twice = true if small_caves_visited.include?(next_cave)
+    #small_cave_visited_twice = true if small_caves_visited.include?(next_cave)
     queued_paths << [travel_log, small_caves_visited, next_cave, small_cave_visited_twice]
   }
 end
 
 #pp cave_full_paths #DEBUG
-#cave_full_paths.each{|o| puts o.join(',') } #DEBUG
+#cave_full_paths.sort.each{|o| puts o.join(',') } #DEBUG
 
 
 ## ANSWER
