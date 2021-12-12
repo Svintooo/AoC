@@ -17,7 +17,7 @@ cave_paths = data.lines.map(&:strip)
                    end
                    caves  # Last row is what is put inside the cave variable on next loop
                  }
-pp cave_paths #DEBUG
+#pp cave_paths #DEBUG
 
 
 ## HELP CODE
@@ -51,10 +51,10 @@ queued_paths    = []
 queued_paths << [ [],      [],           start_cave ]
 
 # Find all paths
-while (travel_log, small_caves_visited, cave = queued_paths.shift)
+while (travel_log, small_caves_visited, cave = queued_paths.shift)  #NOTE: .pop also works
   # End cave reached
   if cave == end_cave
-    cave_full_paths << cave_full_paths + [cave]
+    cave_full_paths << travel_log + [cave]
     next
   end
 
@@ -67,12 +67,15 @@ while (travel_log, small_caves_visited, cave = queued_paths.shift)
     small_caves_visited << cave
   end
 
-  p cave #DEBUG
+  #p cave #DEBUG
   cave_paths[cave].each{|next_cave|
     next if small_caves_visited.include?(next_cave)
     queued_paths << [travel_log, small_caves_visited, next_cave]
   }
 end
+
+#pp cave_full_paths #DEBUG
+#cave_full_paths.each{|o| puts o.join(',') } #DEBUG
 
 
 ## ANSWER
