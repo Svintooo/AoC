@@ -59,6 +59,8 @@ end
 
 
 ## CHECK
+raise "Fold-x contains dots" unless paper.all?{|line| line[fold_x] == '.' }
+raise "Fold-y contains dots" unless paper[fold_y].all?{|char| char == '.' }
 
 
 ## CALCULATE
