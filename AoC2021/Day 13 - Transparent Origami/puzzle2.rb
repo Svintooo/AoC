@@ -32,8 +32,6 @@ folds = folds.map{|line| line.split.last.split('=') }
 #p folds #DEBUG
 
 
-## HELP CODE
-
 # Create the paper
 paper = []
 paper_height = dots.map{|_,y| y }.max + 1
