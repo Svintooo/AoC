@@ -26,16 +26,10 @@ end
 
 ## PARSING
 dots.map!{|dot| dot.split(',').map(&:to_i) }
-
-fold_x = nil
-fold_y = nil
-folds.each{|line|
-            key,val = line.split.last.split('=')
-            fold_x = val.to_i if key == 'x'
-            fold_y = val.to_i if key == 'y'
-          }
+folds = folds.map{|line| line.split.last.split('=') }
+             .map{|x_or_y,number| [x_or_y,number.to_i] }
 #p dots #DEBUG
-p [fold_x,fold_y] #DEBUG
+#p folds #DEBUG
 
 
 ## HELP CODE
@@ -58,29 +52,47 @@ dots.each do |x,y|
   paper[y][x] = DOT
 end
 #pp paper #DEBUG
-paper.each{|line| puts line.join } #DEBUG
+#puts;paper.each{|line| puts line.join } #DEBUG
 
 
 ## CHECK
-raise "Fold-x contains dots" unless paper.all?{|line| line[fold_x] == '.' }
-raise "Fold-y contains dots" unless paper[fold_y].all?{|char| char == '.' }
+raise "Fold-x contains dots" unless folds.select{|char,_| char == 'x'}.all?{|_,x| paper.all?{|line| line[x] == EMPTY } }
+raise "Fold-y contains dots" unless folds.select{|char,_| char == 'y'}.all?{|_,y| paper[y].all?{|char| char == EMPTY } }
 
 
 ## CALCULATE
 
-# Fold y
-(fold_y+1).upto(paper.length-1).each do |y|
-  paper[y].each_with_index do |char,x|
-    next unless char == DOT
-    p [x,y] #DEBUG
-    paper[(fold_y - y + fold_y)][x] = DOT
+# Fold
+folds.each do |char,num|
+  case char
+  when 'x'
+    fold_x = num
+    paper.each_index do |y|
+      (fold_x+1).upto(paper[y].length-1).each do |x|
+        next unless paper[y][x] == DOT
+        paper[y][fold_x - x + fold_x] = DOT
+      end
+    end
+    paper.each_index{|y| paper[y] = paper[y][0..fold_x] }
+
+  when 'y'
+    fold_y = num
+    (fold_y+1).upto(paper.length-1).each do |y|
+      paper[y].each_index do |x|
+        next unless paper[y][x] == DOT
+        paper[(fold_y - y + fold_y)][x] = DOT
+      end
+    end
+    paper = paper[0...fold_y]
   end
+
+  break  # Puzzle 1 is only interested in the first fold
 end
-paper = paper[0...fold_y]
+
 #pp paper #DEBUG
 #puts;paper.each{|line| puts line.join } #DEBUG
 
 
 ## ANSWER
-answer = nil
+answer = paper.flatten.select{|char| char == DOT }.count
 puts answer
