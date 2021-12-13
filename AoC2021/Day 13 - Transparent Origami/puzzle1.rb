@@ -2,6 +2,9 @@
 
 
 ## INPUT
+DOT = '#'
+EMPTY = '.'
+
 dots  = []
 folds = []
 
@@ -32,7 +35,7 @@ folds.each{|line|
             fold_y = val.to_i if key == 'y'
           }
 #p dots #DEBUG
-#p [fold_x,fold_y] #DEBUG
+p [fold_x,fold_y] #DEBUG
 
 
 ## HELP CODE
@@ -45,17 +48,17 @@ paper_width  = dots.map{|x,_| x }.max + 1
 #p paper_width #DEBUG
 
 paper_height.times do |i|
-  paper[i] = Array.new(paper_width, '.')
+  paper[i] = Array.new(paper_width, EMPTY)
 end
 #pp paper #DEBUG
 
 
 # Fill in dots on paper
 dots.each do |x,y|
-  paper[y][x] = '#'
+  paper[y][x] = DOT
 end
 #pp paper #DEBUG
-#paper.each{|line| puts line.join } #DEBUG
+paper.each{|line| puts line.join } #DEBUG
 
 
 ## CHECK
@@ -64,6 +67,18 @@ raise "Fold-y contains dots" unless paper[fold_y].all?{|char| char == '.' }
 
 
 ## CALCULATE
+
+# Fold y
+(fold_y+1).upto(paper.length-1).each do |y|
+  paper[y].each_with_index do |char,x|
+    next unless char == DOT
+    p [x,y] #DEBUG
+    paper[(fold_y - y + fold_y)][x] = DOT
+  end
+end
+paper = paper[0...fold_y]
+#pp paper #DEBUG
+#puts;paper.each{|line| puts line.join } #DEBUG
 
 
 ## ANSWER
