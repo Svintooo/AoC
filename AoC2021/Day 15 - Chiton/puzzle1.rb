@@ -18,11 +18,14 @@ map = data.lines.map(&:strip)
 # A crude priority queue
 path_queue = {}
 def path_queue.current_prio
+  # Always use the queue with the lowest priority value
   self.keys.min
 end
 def path_queue.<<(path_queue_data)
   xy,history,history_risks,risk = path_queue_data
 
+  # I tried different ways of prioritizations
+  # Not sure which one is the best
   #prio = risk
   #prio = [risk,history.length]
   #prio = [history.length,risk]
@@ -43,11 +46,15 @@ end
 
 
 ## CALCULATE
-path_queue << [[0,0],[],[],1]  # initialize
+path_queue << [[0,0],[],[],1]  # initialize the queue
 #p path_queue #DEBUG
 
+# Lists the lowest found risk to get to a specific coordinate
+# If a path gets to one of these coordinates and has a higher
+# total risk, then that path is discarded.
 visited_optimal_paths = {}
-final_path = []
+
+final_path = nil
 
 while ((x,y),history,history_risks = path_queue.pop)
   if y == map.length-1 && x == map[y].length-1
@@ -61,16 +68,16 @@ while ((x,y),history,history_risks = path_queue.pop)
   next if y == map.length-1 && history.last == [x+1,y]
   next if x == map[y].length-1 && history.last == [x,y+1]
 
-  #skip if another path has led to here with a more optimal path
+  #skip if another path has gotten to one of the coordinates in history in a more optimal way
   skip = false
   history.each_index do |i|
     x2,y2 = history[i]
     risk  = history_risks[i]
     (skip = true; break) if visited_optimal_paths.has_key?([x2,y2]) && visited_optimal_paths[[x2,y2]] < risk
-    #puts"#[#{x2},#{y2}] risk(#{risk}) optimal()" #DEBUG
   end
   next if skip
-  #
+
+  #skip if another path has led to here with a more optimal path
   risk = history_risks.last.to_i + map[y][x]
   next if visited_optimal_paths.has_key?([x,y]) && visited_optimal_paths[[x,y]] <= risk
   visited_optimal_paths[[x,y]] = risk
@@ -86,12 +93,12 @@ while ((x,y),history,history_risks = path_queue.pop)
   #p [x,y]
   #asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
   #puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
-
+  #
   #puts
   #STDIN.gets("\n")  # Step each loop by pressing enter
 end
 
-#pp final_path #DEBUG
+# DEBUG
 #asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
 #puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
 #puts
