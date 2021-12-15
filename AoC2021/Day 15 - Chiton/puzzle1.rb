@@ -23,7 +23,9 @@ end
 def path_queue.<<(path_queue_data)
   xy,history,prio = path_queue_data
 
-  key = [history.length,prio]
+  key = prio
+  #key = [prio,history.length]
+  #key = [history.length,prio]
 
   self[key] ||= []
   self[key] << [xy,history]
@@ -43,6 +45,7 @@ end
 path_queue << [[0,0],[],1]  # initialize
 p path_queue #DEBUG
 
+#visited_optimal_paths = {}
 final_path = []
 
 while ((x,y),history = path_queue.pop)
@@ -50,6 +53,14 @@ while ((x,y),history = path_queue.pop)
     final_path = history.push([x,y])
     break
   end
+
+  #if at bottom: must go right
+  next if y == map.length-1 && history.last == [x+1,y]
+
+  #if at left side: must go down
+  next if x == map[y].length-1 && history.last == [x,y+1]
+
+  #visited_optimal_paths
 
   #NOTE: prioritize down-right by putting those directions first in queue
   [[x,y+1],[x+1,y],[x,y-1],[x-1,y]].each do |x2,y2|
