@@ -23,9 +23,9 @@ end
 def path_queue.<<(path_queue_data)
   xy,history,prio = path_queue_data
 
-  key = prio
+  #key = prio
   #key = [prio,history.length]
-  #key = [history.length,prio]
+  key = [history.length,prio]
 
   self[key] ||= []
   self[key] << [xy,history]
@@ -45,7 +45,7 @@ end
 path_queue << [[0,0],[],1]  # initialize
 p path_queue #DEBUG
 
-#visited_optimal_paths = {}
+visited_optimal_paths = {}
 final_path = []
 
 while ((x,y),history = path_queue.pop)
@@ -54,13 +54,16 @@ while ((x,y),history = path_queue.pop)
     break
   end
 
-  #if at bottom: must go right
+  #if at the end of map: stop if can't reach goal position
+  next if y == 0 && history.last == [x+1,y]
+  next if x == 0 && history.last == [x,y+1]
   next if y == map.length-1 && history.last == [x+1,y]
-
-  #if at left side: must go down
   next if x == map[y].length-1 && history.last == [x,y+1]
 
-  #visited_optimal_paths
+  #skip if another path has led to here with a more optimal path
+  risk = history.map{|x,y| map[y][x] }.sum
+  next if visited_optimal_paths.has_key?([x,y]) && visited_optimal_paths[[x,y]] < risk
+  visited_optimal_paths[[x,y]] = risk
 
   #NOTE: prioritize down-right by putting those directions first in queue
   [[x,y+1],[x+1,y],[x,y-1],[x-1,y]].each do |x2,y2|
@@ -70,20 +73,15 @@ while ((x,y),history = path_queue.pop)
   end
 
   # DEBUG
-  #print path_queue.inspect;STDIN.gets("\n") #DEBUG
-  #pp path_queue
-  #puts"##{path_queue.current_prio}" #DEBUG
-  p [x,y]
-  #asdf = history.+([[x,y]]).inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
-  asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
-  #puts map.clone.map{|l| l.clone }.yield_self{|m| asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' unless xs.include?(x) } }; m }.map(&:join).join("\n")
-  puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
-  #puts map.clone.map{|l| l.clone }.yield_self{|m|}.map(&:join).join("\n")
-  STDIN.gets("\n")
+  #p [x,y]
+  #asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
+  #puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
+  #STDIN.gets("\n")
 end
 
-pp final_path #DEBUG
-
+#pp final_path #DEBUG
+asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
+puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
 
 ## ANSWER
 answer = final_path.map{|x,y| map[y][x] }.sum - map[0][0]
