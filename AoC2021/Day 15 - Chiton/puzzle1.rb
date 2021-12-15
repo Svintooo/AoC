@@ -26,7 +26,7 @@ def path_queue.<<(path_queue_data)
   key = [prio,history.length]
 
   self[key] ||= []
-  self[key] << [history,xy]
+  self[key] << [xy,history]
 end
 def path_queue.pop
   key = self.current_prio_key
