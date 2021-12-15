@@ -33,7 +33,6 @@ def path_queue.pop
   return nil if self[:current_prio].nil?
 
   prio = self[:current_prio]
-  puts "##{prio.inspect}"
   element = self[prio].shift
 
   if self[prio].empty?
@@ -47,15 +46,25 @@ end
 
 ## CALCULATE
 path_queue << [[0,0],[],1]  # initialize
-p path_queue
+p path_queue #DEBUG
+
+final_path = []
 
 while ((x,y),history = path_queue.pop)
-  p x
-  p y
-  p history
+  if y == map.length-1 && x == map[y].length-1
+    final_path = history.push([x,y])
+    break
+  end
+
+  #NOTE: prioritize down-right by putting those directions first in queue
+  [[x,y+1],[x+1,y],[x,y-1],[x-1,y]].each do |x2,y2|
+    next if y2<0 || x2<0 || y2>map.length-1 || x2>map[y2].length-1
+    next if history.include? [x2,y2]
+    path_queue << [[x2,y2], history.push([x,y]), map[y2][x2]]
+  end
 end
 
 
 ## ANSWER
-answer = nil
+answer = final_path.map{|x,y| map[y][x] }.sum - map[0][0]
 puts answer
