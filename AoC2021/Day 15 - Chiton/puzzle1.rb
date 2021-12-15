@@ -25,7 +25,8 @@ def path_queue.<<(path_queue_data)
 
   #key = prio
   #key = [prio,history.length]
-  key = [history.length,prio]
+  #key = [history.length,prio]
+  key = history_risks.last.to_i
 
   self[key] ||= []
   self[key] << [xy,history,history_risks]
@@ -43,7 +44,7 @@ end
 
 ## CALCULATE
 path_queue << [[0,0],[],[],1]  # initialize
-p path_queue #DEBUG
+#p path_queue #DEBUG
 
 visited_optimal_paths = {}
 final_path = []
@@ -71,7 +72,7 @@ while ((x,y),history,history_risks = path_queue.pop)
   next if skip
   #
   risk = history_risks.last.to_i + map[y][x]
-  next if visited_optimal_paths.has_key?([x,y]) && visited_optimal_paths[[x,y]] < risk
+  next if visited_optimal_paths.has_key?([x,y]) && visited_optimal_paths[[x,y]] <= risk
   visited_optimal_paths[[x,y]] = risk
 
   #NOTE: prioritize down-right by putting those directions first in queue
@@ -83,16 +84,16 @@ while ((x,y),history,history_risks = path_queue.pop)
 
   # DEBUG
   #p [x,y]
-  #p history_risks
+  ##p history_risks
   #asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
   #puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
-  #puts
+  ##puts
   #STDIN.gets("\n")
 end
 
 #pp final_path #DEBUG
-#asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
-#puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
+asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
+puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
 #pp visited_optimal_paths
 
 ## ANSWER
