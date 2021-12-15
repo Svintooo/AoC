@@ -21,14 +21,14 @@ def path_queue.current_prio_key
   self.keys.min
 end
 def path_queue.<<(path_queue_data)
-  xy,history,prio = path_queue_data
+  xy,history,history_risks,prio = path_queue_data
 
   #key = prio
   #key = [prio,history.length]
   key = [history.length,prio]
 
   self[key] ||= []
-  self[key] << [xy,history]
+  self[key] << [xy,history,history_risks]
 end
 def path_queue.pop
   key = self.current_prio_key
@@ -42,13 +42,13 @@ end
 
 
 ## CALCULATE
-path_queue << [[0,0],[],1]  # initialize
+path_queue << [[0,0],[],[0],1]  # initialize
 p path_queue #DEBUG
 
 visited_optimal_paths = {}
 final_path = []
 
-while ((x,y),history = path_queue.pop)
+while ((x,y),history,history_risks = path_queue.pop)
   if y == map.length-1 && x == map[y].length-1
     final_path = history.push([x,y])
     break
@@ -69,7 +69,7 @@ while ((x,y),history = path_queue.pop)
   [[x,y+1],[x+1,y],[x,y-1],[x-1,y]].each do |x2,y2|
     next if y2<0 || x2<0 || y2>map.length-1 || x2>map[y2].length-1
     next if history.include? [x2,y2]
-    path_queue << [[x2,y2], history+[[x,y]], map[y2][x2]]
+    path_queue << [[x2,y2], history+[[x,y]], history_risks+[history_risks.last+map[y][x]], map[y2][x2]]
   end
 
   # DEBUG
