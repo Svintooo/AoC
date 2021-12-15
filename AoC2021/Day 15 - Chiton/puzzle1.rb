@@ -17,21 +17,23 @@ map = data.lines.map(&:strip)
 ## HELP CODE
 # A crude priority queue
 path_queue = {}
-def path_queue.current_prio
+def path_queue.current_prio_key
   self.keys.min
 end
 def path_queue.<<(path_queue_data)
   xy,history,prio = path_queue_data
 
-  self[prio] ||= []
-  self[prio] << [xy,history]
+  key = [prio,history.length]
+
+  self[key] ||= []
+  self[key] << [xy,history]
 end
 def path_queue.pop
-  prio = self.current_prio
-  return nil if prio.nil?
+  key = self.current_prio_key
+  return nil if key.nil?
 
-  element = self[prio].shift
-  self.delete(prio) if self[prio].empty?
+  element = self[key].shift
+  self.delete(key) if self[key].empty?
 
   return element
 end
