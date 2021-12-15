@@ -13,18 +13,19 @@ raise "Input contains non-integer characters" if data.match? /[^0-9\r\n]/
 map = data.lines.map(&:strip)
                 .map{|line| line.chars.map(&:to_i) }
 
+# Pentuple the size of the map
 orig_y_len = map.length
 orig_x_len = map[0].length
 #puts map.map(&:join).join("\n")
-
+#
 (orig_y_len).upto(orig_y_len.*(5).-(1)).each do |y|
-  map[y] = map[y-orig_y_len].clone.map{|risk| (risk+1)%10 }
+  map[y] = map[y-orig_y_len].clone.map{|risk| n=(risk+1)%10; n==0?1:n }
 end
 #puts map.map(&:join).join("\n")
-
+#
 (orig_x_len).upto(orig_x_len.*(5).-(1)).each do |x|
   map.each_index do |y|
-    map[y][x] = (map[y][x-orig_x_len] + 1)%10
+    map[y][x] = ( n=(map[y][x-orig_x_len] + 1)%10; n==0?1:n )
   end
 end
 #puts map.map(&:join).join("\n")
@@ -33,26 +34,26 @@ end
 ## HELP CODE
 # A crude priority queue
 path_queue = {}
-def path_queue.current_prio_key
+def path_queue.current_prio
   self.keys.min
 end
 def path_queue.<<(path_queue_data)
-  xy,history,history_risks,prio = path_queue_data
+  xy,history,history_risks,risk = path_queue_data
 
-  #key = prio
-  #key = [prio,history.length]
-  #key = [history.length,prio]
-  key = history_risks.last.to_i
+  #prio = risk
+  #prio = [risk,history.length]
+  #prio = [history.length,risk]
+  prio = history_risks.last.to_i
 
-  self[key] ||= []
-  self[key] << [xy,history,history_risks]
+  self[prio] ||= []
+  self[prio] << [xy,history,history_risks]
 end
 def path_queue.pop
-  key = self.current_prio_key
-  return nil if key.nil?
+  prio = self.current_prio
+  return nil if prio.nil?
 
-  element = self[key].shift
-  self.delete(key) if self[key].empty?
+  element = self[prio].shift
+  self.delete(prio) if self[prio].empty?
 
   return element
 end
@@ -108,9 +109,9 @@ while ((x,y),history,history_risks = path_queue.pop)
 end
 
 #pp final_path #DEBUG
-asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
-puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
-puts
+#asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
+#puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
+#puts
 #pp visited_optimal_paths
 
 ## ANSWER
