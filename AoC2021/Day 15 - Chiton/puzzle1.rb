@@ -42,7 +42,7 @@ end
 
 
 ## CALCULATE
-path_queue << [[0,0],[],[0],1]  # initialize
+path_queue << [[0,0],[],[],1]  # initialize
 p path_queue #DEBUG
 
 visited_optimal_paths = {}
@@ -61,7 +61,16 @@ while ((x,y),history,history_risks = path_queue.pop)
   next if x == map[y].length-1 && history.last == [x,y+1]
 
   #skip if another path has led to here with a more optimal path
-  risk = history_risks.last
+  skip = false
+  history.each_index do |i|
+    x2,y2 = history[i]
+    risk  = history_risks[i]
+    (skip = true; break) if visited_optimal_paths.has_key?([x2,y2]) && visited_optimal_paths[[x2,y2]] < risk
+    #puts"#[#{x2},#{y2}] risk(#{risk}) optimal()" #DEBUG
+  end
+  next if skip
+  #
+  risk = history_risks.last.to_i + map[y][x]
   next if visited_optimal_paths.has_key?([x,y]) && visited_optimal_paths[[x,y]] < risk
   visited_optimal_paths[[x,y]] = risk
 
@@ -69,19 +78,22 @@ while ((x,y),history,history_risks = path_queue.pop)
   [[x,y+1],[x+1,y],[x,y-1],[x-1,y]].each do |x2,y2|
     next if y2<0 || x2<0 || y2>map.length-1 || x2>map[y2].length-1
     next if history.include? [x2,y2]
-    path_queue << [[x2,y2], history+[[x,y]], history_risks+[history_risks.last+map[y][x]], map[y2][x2]]
+    path_queue << [[x2,y2], history+[[x,y]], history_risks+[history_risks.last.to_i+map[y][x]], map[y2][x2]]
   end
 
   # DEBUG
   #p [x,y]
-  #asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
-  #puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
+  p history_risks
+  asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
+  puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
+  puts
   #STDIN.gets("\n")
 end
 
 #pp final_path #DEBUG
 asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
 puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
+#pp visited_optimal_paths
 
 ## ANSWER
 answer = final_path.map{|x,y| map[y][x] }.sum - map[0][0]
