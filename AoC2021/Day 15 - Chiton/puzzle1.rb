@@ -60,9 +60,21 @@ while ((x,y),history = path_queue.pop)
   [[x,y+1],[x+1,y],[x,y-1],[x-1,y]].each do |x2,y2|
     next if y2<0 || x2<0 || y2>map.length-1 || x2>map[y2].length-1
     next if history.include? [x2,y2]
-    path_queue << [[x2,y2], history.push([x,y]), map[y2][x2]]
+    path_queue << [[x2,y2], history+[[x,y]], map[y2][x2]]
   end
+
+  #print path_queue.inspect;STDIN.gets("\n") #DEBUG
+  pp path_queue
+  p [x,y]
+  #asdf = history.+([[x,y]]).inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
+  asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
+  #puts map.clone.map{|l| l.clone }.yield_self{|m| asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' unless xs.include?(x) } }; m }.map(&:join).join("\n")
+  puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
+  #puts map.clone.map{|l| l.clone }.yield_self{|m|}.map(&:join).join("\n")
+  STDIN.gets("\n")
 end
+
+pp final_path #DEBUG
 
 
 ## ANSWER
