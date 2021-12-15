@@ -113,6 +113,7 @@ end
 #puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
 #puts
 
+
 ## ANSWER
 answer = final_path.map{|x,y| map[y][x] }.sum - map[0][0]
 puts answer
