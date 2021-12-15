@@ -17,28 +17,21 @@ map = data.lines.map(&:strip)
 ## HELP CODE
 # A crude priority queue
 path_queue = {}
+def path_queue.current_prio
+  self.keys.min
+end
 def path_queue.<<(path_queue_data)
   xy,history,prio = path_queue_data
-
-  if self[:current_prio].nil?
-    self[:current_prio] = prio
-  else
-    self[:current_prio] = [ prio, self[:current_prio] ].min
-  end
 
   self[prio] ||= []
   self[prio] << [xy,history]
 end
 def path_queue.pop
-  return nil if self[:current_prio].nil?
+  prio = self.current_prio
+  return nil if prio.nil?
 
-  prio = self[:current_prio]
   element = self[prio].shift
-
-  if self[prio].empty?
-    self.delete(prio)
-    self[:current_prio] = self.keys.reject{|k|k=:current_prio}.min
-  end
+  self.delete(prio) if self[prio].empty?
 
   return element
 end
@@ -63,8 +56,10 @@ while ((x,y),history = path_queue.pop)
     path_queue << [[x2,y2], history+[[x,y]], map[y2][x2]]
   end
 
+  # DEBUG
   #print path_queue.inspect;STDIN.gets("\n") #DEBUG
-  pp path_queue
+  #pp path_queue
+  #puts"##{path_queue.current_prio}" #DEBUG
   p [x,y]
   #asdf = history.+([[x,y]]).inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
   asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
