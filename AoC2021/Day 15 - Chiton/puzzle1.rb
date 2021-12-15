@@ -23,7 +23,7 @@ end
 def path_queue.<<(path_queue_data)
   xy,history,prio = path_queue_data
 
-  key = [prio,history.length]
+  key = [history.length,prio]
 
   self[key] ||= []
   self[key] << [xy,history]
