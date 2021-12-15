@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-
+#NOTE: The code needs to run for 10-20 minutes before solving the input for puzzle2.
 
 ## INPUT
 data = ARGF.read
@@ -101,18 +101,17 @@ while ((x,y),history,history_risks = path_queue.pop)
 
   # DEBUG
   #p [x,y]
-  ##p history_risks
   #asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
   #puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
-  ##puts
-  #STDIN.gets("\n")
+
+  #puts
+  #STDIN.gets("\n")  # Step each loop by pressing enter
 end
 
 #pp final_path #DEBUG
 #asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
 #puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
 #puts
-#pp visited_optimal_paths
 
 ## ANSWER
 answer = final_path.map{|x,y| map[y][x] }.sum - map[0][0]
