@@ -83,16 +83,16 @@ while ((x,y),history,history_risks = path_queue.pop)
 
   # DEBUG
   #p [x,y]
-  p history_risks
-  asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
-  puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
-  puts
+  #p history_risks
+  #asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
+  #puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
+  #puts
   #STDIN.gets("\n")
 end
 
 #pp final_path #DEBUG
-asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
-puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
+#asdf = history           .inject({}){|h,(x,y)| h[y] ||= []; h[y] << x; h }
+#puts map.clone.map{|l| l.clone }.yield_self{|m| m[y][x] = '*'; asdf.each{|y,xs| m[y].each_index{|x| m[y][x] = '.' if     xs.include?(x) } }; m }.map(&:join).join("\n")
 #pp visited_optimal_paths
 
 ## ANSWER
