@@ -62,6 +62,8 @@ while ((x,y),history,history_risks = path_queue.pop)
 
   #skip if another path has led to here with a more optimal path
   risk = history.map{|x,y| map[y][x] }.sum
+  p [risk,history_risks.last]
+  exit
   next if visited_optimal_paths.has_key?([x,y]) && visited_optimal_paths[[x,y]] < risk
   visited_optimal_paths[[x,y]] = risk
 
