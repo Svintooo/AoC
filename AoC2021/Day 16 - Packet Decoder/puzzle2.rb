@@ -3,9 +3,9 @@
 
 ## INPUT
 if File.exists? ARGV[0]
-  data = ARGF.read
+  data = ARGF.read  # Read hex data from file
 else
-  data = ARGV[0]
+  data = ARGV[0]    # Read hex data from first argument
 end
 
 
