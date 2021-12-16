@@ -23,14 +23,20 @@ p binary.join #DEBUG
 package = {}
 package[:version] = binary.shift(3).join.to_i(2)
 package[:type_id] = binary.shift(3).join.to_i(2)
-package[:groups ] = []
 #pp package #DEBUG
 
-loop do
-  bits = binary.shift(5)
-  package[:groups] << bits.join
+case package[:type_id]
+  when 4
+    package[:value  ] = []
 
-  break if bits[0] == '0'
+    loop do
+      bits = binary.shift(5)
+      package[:value] << bits[1..-1].join
+
+      break if bits[0] == '0'
+    end
+    package[:value] = package[:value].join.to_i(2)
+  #when end
 end
 pp package #DEBUG
 
