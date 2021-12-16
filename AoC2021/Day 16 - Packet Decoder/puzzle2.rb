@@ -23,8 +23,6 @@ binary = hexadecimal.to_i(16).to_s(2).chars#.map(&:to_i)
 #p binary.join #DEBUG
 
 packets = []
-bits_to_take = []#
-packets_to_find = []#
 decrementers = []
 
 loop do
@@ -111,7 +109,6 @@ loop do
           packet[:sub_packets_lenght] = binary.shift(15).join.to_i(2)
           decrementers.select{|d| d[:type] == "bits" }.each{|d| d[:count] -= 15 }
 
-          bits_to_take << {packet_index: packets.count, count: packet[:sub_packets_lenght]}
           decrementers << {packet_index: packets.count, count: packet[:sub_packets_lenght], type: "bits"}
         when 1
           packet[:number_of_sub_packets] = binary.shift(11).join.to_i(2)
