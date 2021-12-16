@@ -85,16 +85,17 @@ loop do
   break if binary.length < 11
 
   packet = {}
+  packet[:version] = binary.shift(3).join.to_i(2)
+  packet[:type_id] = binary.shift(3).join.to_i(2)
+  #pp packet #DEBUG
+
+  decrementers.select{|d| d[:type] == "bits" }.each{|d| d[:count] -= 6 }
   decrementers.last.yield_self{|d| d[:count] -= 1 if d[:type] == "pkts" } if !decrementers.empty?
   if !decrementers.empty?
     pkt = packets[ decrementers[-1][:packet_index] ]
     pkt[:sub_packets] ||= []
     pkt[:sub_packets] << packet
   end
-  packet[:version] = binary.shift(3).join.to_i(2)
-  packet[:type_id] = binary.shift(3).join.to_i(2)
-  decrementers.select{|d| d[:type] == "bits" }.each{|d| d[:count] -= 6 }
-  #pp packet #DEBUG
 
   case packet[:type_id]
     when 4
@@ -131,28 +132,25 @@ loop do
     #when end
   end
 
-  #decrementers.select{|d| d[:type] == "pkts" }.each{|d| d[:count] -= 1 }
-  #decrementers.select{|d| d[:type] == "pkts" }.last[:count] -= 1
-  #decrementers.last.yield_self{|d| d[:count] -= 1 if d[:type] == "pkts" }
   packets << packet
 
   # DEBUG
   #puts
   #pp decrementers
-  p binary.count
+  #p binary.count
   ##p binary.join
   #p packet
-  ###break
+  #
   #puts
   #STDIN.gets("\n")  # Step each loop by pressing enter
 end
 
 # DEBUG
-puts
-pp decrementers
-p binary.count
-pp packets
-puts
+#puts
+#pp decrementers
+#p binary.count
+#pp packets
+#puts
 
 
 ## ANSWER
