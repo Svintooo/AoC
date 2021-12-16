@@ -32,7 +32,7 @@ loop do
   packet = {}
   packet[:version] = binary.shift(3).join.to_i(2)
   packet[:type_id] = binary.shift(3).join.to_i(2)
-  bits_to_take.last -= 6 unless bits_to_take.empty?
+  bits_to_take[-1] -= 6 unless bits_to_take.empty?
   #pp packet #DEBUG
 
   case packet[:type_id]
@@ -41,7 +41,7 @@ loop do
 
       loop do
         bits = binary.shift(5)
-        bits_to_take.last -= 5 unless bits_to_take.empty?
+        bits_to_take[-1] -= 5 unless bits_to_take.empty?
 
         packet[:value] << bits[1..-1].join
 
@@ -50,18 +50,18 @@ loop do
 
       packet[:value] = packet[:value].join.to_i(2)
     else
-      packet[:length_type_id] = binary.shift(1)
-      bits_to_take.last -= 1 unless bits_to_take.empty?
+      packet[:length_type_id] = binary.shift
+      bits_to_take[-1] -= 1 unless bits_to_take.empty?
 
       case packet[:length_type_id]
         when '0'
           packet[:sub_packets_lenght] = binary.shift(15).join.to_i
-          bits_to_take.last -= 15 unless bits_to_take.empty?
+          bits_to_take[-1] -= 15 unless bits_to_take.empty?
 
           bits_to_take << packet[:sub_packets_lenght]
         when '1'
           packet[:number_of_sub_packets] = binary.shift(11).join.to_i
-          bits_to_take.last -= 11 unless bits_to_take.empty?
+          bits_to_take[-1] -= 11 unless bits_to_take.empty?
 
           packets_to_find << packet[:number_of_sub_packets]
         #when end
