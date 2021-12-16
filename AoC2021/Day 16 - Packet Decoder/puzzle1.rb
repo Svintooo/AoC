@@ -25,8 +25,8 @@ bits_to_take = []
 packets_to_find = []
 
 loop do
-  break if !bits_to_take.empty?    && bits_to_take.last    <= 0
-  break if !packets_to_find.empty? && packets_to_find.last <= 0
+  bits_to_take.pop while !bits_to_take.empty?    && bits_to_take.last    <= 0
+  packets_to_find  while !packets_to_find.empty? && packets_to_find.last <= 0
   break if binary.length < 11
 
   packet = {}
