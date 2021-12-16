@@ -30,11 +30,15 @@ bits_to_take = []
 packets_to_find = []
 
 loop do
-  if !bits_to_take.empty? && bits_to_take[-1][:count] <= 0
-    o = bits_to_take.pop
+  asdf = []
+  asdf << bits_to_take   .pop if !bits_to_take   .empty? && bits_to_take   [-1][:count] <= 0
+  asdf << packets_to_find.pop if !packets_to_find.empty? && packets_to_find[-1][:count] <= 0
+
+  asdf.each do |o|
     $stderr.puts "WARN: bits_to_take < 0" if o[:count] < 0
     packet = packets[ o[:packet_index] ]
-    packet[:sub_packets] = packets[ (o[:packet_index]+1)..-1 ]
+    #packet[:sub_packets] = packets[ (o[:packet_index]+1)..-1 ]
+    print"#";p(packets.count - o[:packet_index] - 1)
     packet[:sub_packets] = packets.pop(packets.count - o[:packet_index] - 1)
 
     packet[:value] = packet[:sub_packets].map{|p| p[:value] }
@@ -57,7 +61,7 @@ loop do
     end
   end
 
-  #bits_to_take.pop while !bits_to_take.empty?    && bits_to_take   [-1][:count]    <= 0
+  #bits_to_take.pop while !bits_to_take.empty?    && bits_to_take   [-1][:count] <= 0
   #packets_to_find  while !packets_to_find.empty? && packets_to_find[-1][:count] <= 0
   break if binary.length < 11
 
@@ -95,7 +99,7 @@ loop do
           packet[:number_of_sub_packets] = binary.shift(11).join.to_i(2)
           bits_to_take[-1][:count] -= 11 unless bits_to_take.empty?
 
-          packets_to_find << {packet_index: packets.count, count: packet[:number_of_sub_packets]}
+          packets_to_find << {packet_index: packets.count, count: packet[:number_of_sub_packets]+1}
         #when end
       end
     #when end
@@ -117,6 +121,7 @@ puts
 puts "   bits_to_take: #{bits_to_take   .inspect}"
 puts "packets_to_find: #{packets_to_find.inspect}"
 pp packets
+puts
 
 
 ## ANSWER
