@@ -72,12 +72,14 @@ loop do
   packets << packet
 
   # DEBUG
+  puts
   pp packet
   p binary.join
   #break
 end
 
 # DEBUG
+puts
 puts "   bits_to_take: #{bits_to_take   .inspect}"
 puts "packets_to_find: #{packets_to_find.inspect}"
 pp packets
