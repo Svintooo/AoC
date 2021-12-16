@@ -31,16 +31,24 @@ packets_to_find = []#
 decrementers = []
 
 loop do
-  finished_decrs = decrementers.select{|d| d[:count] <= 0 }
-  decrementers = decrementers.delete_if{|d| finished_decrs.map{|dd| dd[:packet_index] }.include? d[:packet_index] }
+  #finished_decrs = decrementers.select{|d| d[:count] <= 0 }
+  #decrementers = decrementers.delete_if{|d| finished_decrs.map{|dd| dd[:packet_index] }.include? d[:packet_index] }
 
-  finished_decrs.reverse_each do |o|
-    $stderr.puts "WARN: decrementers < 0" if o[:count] < 0
-    packet = packets[ o[:packet_index] ]
-    #print"#";p([packets.count, o[:packet_index], packets.count - o[:packet_index] - 1]) #DEBUG
-    packet[:sub_packets] = packets.pop(packets.count - o[:packet_index] - 1)
+  #finished_decrs.reverse_each do |decr|
+  while !decrementers.empty? && decrementers[-1][:count] <= 0 do
+    decr = decrementers.pop
 
-    packet[:value] = packet[:sub_packets].map{|p| p[:value] }
+    $stderr.puts "WARN: decrementer count < 0" if decr[:count] < 0
+    packet = packets[ decr[:packet_index] ]
+    #print"#";p([packets.count, decr[:packet_index], packets.count - decr[:packet_index] - 1]) #DEBUG
+    packet[:sub_packets] = packets.pop(packets.count - decr[:packet_index] - 1)
+
+    packet[:value] = packet[:sub_packets].map{|pkt| pkt[:value] }
+    print"#";p [packet[:type_id],packet[:value]] #DEBUG
+    if packet[:value].include?(nil) #DEBUG
+      print"#";p packet[:sub_packets]
+      print"#";pp(decrementers + [decr])
+    end #DEBUG
     case packet[:type_id]
       when 0 #sum
         packet[:value] = packet[:value].sum
@@ -107,19 +115,19 @@ loop do
   packets << packet
 
   # DEBUG
-  puts
-  p decrementers
-  p binary.join
-  pp packet
-  #break
-  STDIN.gets("\n")  # Step each loop by pressing enter
+  #puts
+  #p decrementers
+  #p binary.join
+  #pp packet
+  ##break
+  #STDIN.gets("\n")  # Step each loop by pressing enter
 end
 
 # DEBUG
-puts
-p decrementers
-pp packets
-puts
+#puts
+#p decrementers
+#pp packets
+#puts
 
 
 ## ANSWER
