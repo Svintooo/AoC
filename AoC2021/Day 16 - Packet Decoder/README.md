@@ -14,9 +14,11 @@ I did not do that. Because I am used to code iterative solutions. The code compl
 
 I also almost didn't finish puzzle2 before day end because of one tiny misunderstanding: when "length type ID" represents a count for the number of packages, I thought all sub-packages was included, not only the ones right under the package.
 
-  package1       <- This package includes 2 packages
+```
+  package1       <- This package has a package count of 2
     package1.1      <- This package is included in the count for package1
     package1.2      <- Also this one
-      package1.2.1  <- BUT not this one.
+      package1.2.1  <- But NOT this one
+```
 
 Because of this error the parser failed to parse the input, even though it worked great for all the example inputs that the puzzle provided.
