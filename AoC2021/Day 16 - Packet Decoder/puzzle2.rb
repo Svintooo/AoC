@@ -42,20 +42,20 @@ loop do
     packet[:sub_packets] = packets.pop(packets.count - o[:packet_index] - 1)
 
     packet[:value] = packet[:sub_packets].map{|p| p[:value] }
-    case
-      when '0' #sum
+    case packet[:type_id]
+      when 0 #sum
         packet[:value] = packet[:value].sum
-      when '1' #product
+      when 1 #product
         packet[:value] = packet[:value].inject(&:*)
-      when '2' #minimum
+      when 2 #minimum
         packet[:value] = packet[:value].min
-      when '3' #maximum
+      when 3 #maximum
         packet[:value] = packet[:value].max
-      when '5' #greater than
+      when 5 #greater than
         packet[:value] = (packet[:value].first > packet[:value].last) ? 1 : 0
-      when '6' #less than
+      when 6 #less than
         packet[:value] = (packet[:value].first < packet[:value].last) ? 1 : 0
-      when '7' #equal to
+      when 7 #equal to
         packet[:value] = (packet[:value].first == packet[:value].last) ? 1 : 0
       #end when
     end
@@ -86,16 +86,16 @@ loop do
 
       packet[:value] = packet[:value].join.to_i(2)
     else
-      packet[:length_type_id] = binary.shift
+      packet[:length_type_id] = binary.shift.to_i(2)
       bits_to_take[-1][:count] -= 1 unless bits_to_take.empty?
 
       case packet[:length_type_id]
-        when '0'
+        when 0
           packet[:sub_packets_lenght] = binary.shift(15).join.to_i(2)
           bits_to_take[-1][:count] -= 15 unless bits_to_take.empty?
 
           bits_to_take << {packet_index: packets.count, count: packet[:sub_packets_lenght]}
-        when '1'
+        when 1
           packet[:number_of_sub_packets] = binary.shift(11).join.to_i(2)
           bits_to_take[-1][:count] -= 11 unless bits_to_take.empty?
 
