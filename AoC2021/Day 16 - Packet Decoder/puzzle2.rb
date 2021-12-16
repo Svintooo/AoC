@@ -2,7 +2,11 @@
 
 
 ## INPUT
-data = ARGF.read
+if File.exists? ARGV[0]
+  data = ARGF.read
+else
+  data = ARGV[0]
+end
 
 
 ## PARSING
@@ -13,6 +17,7 @@ hexadecimal = data.strip
 
 
 ## CHECK
+raise "Data contains non-hexadecimal characters" unless hexadecimal.match?  /\A[0-9A-Z]+\z/i
 
 
 ## CALCULATE
@@ -32,20 +37,28 @@ loop do
     packet[:sub_packets] = packets[ (o[:packet_index]+1)..-1 ]
     packet[:sub_packets] = packets.pop(packets.count - o[:packet_index] - 1)
 
+    packet[:value] = packet[:sub_packets].map{|p| p[:value] }
     case
       when '0' #sum
+        packet[:value] = packet[:value].sum
       when '1' #product
+        packet[:value] = packet[:value].inject(&:*)
       when '2' #minimum
+        packet[:value] = packet[:value].min
       when '3' #maximum
+        packet[:value] = packet[:value].max
       when '5' #greater than
+        packet[:value] = (packet[:value].first > packet[:value].last) ? 1 : 0
       when '6' #less than
+        packet[:value] = (packet[:value].first < packet[:value].last) ? 1 : 0
       when '7' #equal to
+        packet[:value] = (packet[:value].first == packet[:value].last) ? 1 : 0
       #end when
     end
   end
 
-  bits_to_take.pop while !bits_to_take.empty?    && bits_to_take   [-1][:count]    <= 0
-  packets_to_find  while !packets_to_find.empty? && packets_to_find[-1][:count] <= 0
+  #bits_to_take.pop while !bits_to_take.empty?    && bits_to_take   [-1][:count]    <= 0
+  #packets_to_find  while !packets_to_find.empty? && packets_to_find[-1][:count] <= 0
   break if binary.length < 11
 
   packet = {}
@@ -88,23 +101,24 @@ loop do
     #when end
   end
 
-  packets_to_find[-1][:count] -= 11 unless packets_to_find.empty?
+  packets_to_find[-1][:count] -= 1 unless packets_to_find.empty?
   packets << packet
 
   # DEBUG
-  #puts
-  #pp packet
-  #p binary.join
+  puts
+  pp packet
+  p binary.join
   #break
+  STDIN.gets("\n")  # Step each loop by pressing enter
 end
 
 # DEBUG
-#puts
-#puts "   bits_to_take: #{bits_to_take   .inspect}"
-#puts "packets_to_find: #{packets_to_find.inspect}"
-#pp packets
+puts
+puts "   bits_to_take: #{bits_to_take   .inspect}"
+puts "packets_to_find: #{packets_to_find.inspect}"
+pp packets
 
 
 ## ANSWER
-answer = nil
+answer = packets[0][:value]
 puts answer
