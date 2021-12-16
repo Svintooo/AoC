@@ -16,13 +16,22 @@ hexadecimal = data.strip
 
 
 ## CALCULATE
-#binary = hexadecimal.to_i(16).to_s(2).chars.map(&:to_i)
+#binary = hexadecimal.to_i(16).to_s(2).chars#.map(&:to_i)
 binary = hexadecimal.chars.map{|hex| hex.to_i(16).to_s(2).rjust(4,'0') }.join.chars#.map(&:to_i)
 p binary.join #DEBUG
 
 package = {}
 package[:version] = binary.shift(3).join.to_i(2)
 package[:type_id] = binary.shift(3).join.to_i(2)
+package[:groups ] = []
+#pp package #DEBUG
+
+loop do
+  bits = binary.shift(5)
+  package[:groups] << bits.join
+
+  break if bits[0] == '0'
+end
 pp package #DEBUG
 
 
