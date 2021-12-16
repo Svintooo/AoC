@@ -26,19 +26,22 @@ binary = hexadecimal.chars.map{|hex| hex.to_i(16).to_s(2).rjust(4,'0') }.join.ch
 #p binary.join #DEBUG
 
 packets = []
-bits_to_take = []
-packets_to_find = []
+bits_to_take = []#
+packets_to_find = []#
+decrementers = []
 
 loop do
-  asdf = []
-  asdf << bits_to_take   .pop if !bits_to_take   .empty? && bits_to_take   [-1][:count] <= 0
-  asdf << packets_to_find.pop if !packets_to_find.empty? && packets_to_find[-1][:count] <= 0
+  #asdf = []
+  #asdf << bits_to_take   .pop if !bits_to_take   .empty? && bits_to_take   [-1][:count] <= 0
+  #asdf << packets_to_find.pop if !packets_to_find.empty? && packets_to_find[-1][:count] <= 0
+  finished_decrs = decrementers.select{|d| d[:count] <= 0 }
+  decrementers = decrementers.delete_if{|d| finished_decrs.map{|dd| dd[:packet_index] }.include? d[:packet_index] }
 
-  asdf.each do |o|
+  finished_decrs.reverse_each do |o|
     $stderr.puts "WARN: bits_to_take < 0" if o[:count] < 0
     packet = packets[ o[:packet_index] ]
     #packet[:sub_packets] = packets[ (o[:packet_index]+1)..-1 ]
-    print"#";p(packets.count - o[:packet_index] - 1)
+    print"#";p([packets.count, o[:packet_index], packets.count - o[:packet_index] - 1])
     packet[:sub_packets] = packets.pop(packets.count - o[:packet_index] - 1)
 
     packet[:value] = packet[:sub_packets].map{|p| p[:value] }
@@ -61,14 +64,13 @@ loop do
     end
   end
 
-  #bits_to_take.pop while !bits_to_take.empty?    && bits_to_take   [-1][:count] <= 0
-  #packets_to_find  while !packets_to_find.empty? && packets_to_find[-1][:count] <= 0
   break if binary.length < 11
 
   packet = {}
   packet[:version] = binary.shift(3).join.to_i(2)
   packet[:type_id] = binary.shift(3).join.to_i(2)
-  bits_to_take[-1][:count] -= 6 unless bits_to_take.empty?
+  #bits_to_take[-1][:count] -= 6 unless bits_to_take.empty?
+  decrementers.select{|d| d[:type] == "bits" }.each{|d| d[:count] -= 6 }
   #pp packet #DEBUG
 
   case packet[:type_id]
@@ -77,7 +79,8 @@ loop do
 
       loop do
         bits = binary.shift(5)
-        bits_to_take[-1][:count] -= 5 unless bits_to_take.empty?
+        #bits_to_take[-1][:count] -= 5 unless bits_to_take.empty?
+        decrementers.select{|d| d[:type] == "bits" }.each{|d| d[:count] -= 5 }
 
         packet[:value] << bits[1..-1].join
 
@@ -87,39 +90,48 @@ loop do
       packet[:value] = packet[:value].join.to_i(2)
     else
       packet[:length_type_id] = binary.shift.to_i(2)
-      bits_to_take[-1][:count] -= 1 unless bits_to_take.empty?
+      #bits_to_take[-1][:count] -= 1 unless bits_to_take.empty?
+      decrementers.select{|d| d[:type] == "bits" }.each{|d| d[:count] -= 1 }
 
       case packet[:length_type_id]
         when 0
           packet[:sub_packets_lenght] = binary.shift(15).join.to_i(2)
-          bits_to_take[-1][:count] -= 15 unless bits_to_take.empty?
+          #bits_to_take[-1][:count] -= 15 unless bits_to_take.empty?
+          decrementers.select{|d| d[:type] == "bits" }.each{|d| d[:count] -= 15 }
 
           bits_to_take << {packet_index: packets.count, count: packet[:sub_packets_lenght]}
+          decrementers << {type: "bits", packet_index: packets.count, count: packet[:sub_packets_lenght]}
         when 1
           packet[:number_of_sub_packets] = binary.shift(11).join.to_i(2)
-          bits_to_take[-1][:count] -= 11 unless bits_to_take.empty?
+          #bits_to_take[-1][:count] -= 11 unless bits_to_take.empty?
+          decrementers.select{|d| d[:type] == "bits" }.each{|d| d[:count] -= 11 }
 
-          packets_to_find << {packet_index: packets.count, count: packet[:number_of_sub_packets]+1}
+          decrementers << {type: "packets", packet_index: packets.count, count: packet[:number_of_sub_packets]+1}
         #when end
       end
     #when end
   end
 
-  packets_to_find[-1][:count] -= 1 unless packets_to_find.empty?
+  #packets_to_find[-1][:count] -= 1 unless packets_to_find.empty?
+  decrementers.select{|d| d[:type] == "packets" }.each{|d| d[:count] -= 1 }
   packets << packet
 
   # DEBUG
   puts
-  pp packet
+  #puts "   bits_to_take: #{bits_to_take   .inspect}"
+  #puts "packets_to_find: #{packets_to_find.inspect}"
+  p decrementers
   p binary.join
+  pp packet
   #break
   STDIN.gets("\n")  # Step each loop by pressing enter
 end
 
 # DEBUG
 puts
-puts "   bits_to_take: #{bits_to_take   .inspect}"
-puts "packets_to_find: #{packets_to_find.inspect}"
+#puts "   bits_to_take: #{bits_to_take   .inspect}"
+#puts "packets_to_find: #{packets_to_find.inspect}"
+p decrementers
 pp packets
 puts
 
