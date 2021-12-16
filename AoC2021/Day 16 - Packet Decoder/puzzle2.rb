@@ -13,16 +13,13 @@ end
 hexadecimal = data.strip
 
 
-## HELP CODE
-
-
 ## CHECK
-raise "Data contains non-hexadecimal characters" unless hexadecimal.match?  /\A[0-9A-Z]+\z/i
+raise "Data contains non-hexadecimal characters" unless hexadecimal.match? /\A[0-9A-Z]+\z/i
 
 
 ## CALCULATE
-#binary = hexadecimal.to_i(16).to_s(2).chars#.map(&:to_i)
-binary = hexadecimal.chars.map{|hex| hex.to_i(16).to_s(2).rjust(4,'0') }.join.chars#.map(&:to_i)
+binary = hexadecimal.to_i(16).to_s(2).chars#.map(&:to_i)
+#binary = hexadecimal.chars.map{|hex| hex.to_i(16).to_s(2).rjust(4,'0') }.join.chars#.map(&:to_i)
 #p binary.join #DEBUG
 
 packets = []
@@ -35,7 +32,9 @@ loop do
     decr = decrementers.pop
 
     $stderr.puts "WARN: decrementer count < 0" if decr[:count] < 0
-    #if decr[:count] < 0 #DEBUG
+
+    # DEBUG: Show a pretty-indented list of all packages
+    #if decr[:count] < 0
     #  table = [:sum,:pro,:min,:max,:val,:grt,:lst,:eq]
     #  #inc = 0
     #  queue = [ [0,packets[0]] ]
@@ -49,7 +48,7 @@ loop do
     #    pkt[:sub_packets].reverse_each{|o| queue.unshift [inc+1,o] } if pkt[:sub_packets]
     #  end
     #  exit
-    #end #DEBUG
+    #end
 
     packet = packets[ decr[:packet_index] ]
     packets.pop(packets.count - decr[:packet_index] - 1)
