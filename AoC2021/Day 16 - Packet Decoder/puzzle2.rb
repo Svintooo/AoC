@@ -31,10 +31,6 @@ packets_to_find = []#
 decrementers = []
 
 loop do
-  #finished_decrs = decrementers.select{|d| d[:count] <= 0 }
-  #decrementers = decrementers.delete_if{|d| finished_decrs.map{|dd| dd[:packet_index] }.include? d[:packet_index] }
-
-  #finished_decrs.reverse_each do |decr|
   while !decrementers.empty? && decrementers[-1][:count] <= 0 do
     decr = decrementers.pop
 
@@ -115,19 +111,21 @@ loop do
   packets << packet
 
   # DEBUG
-  #puts
-  #p decrementers
+  puts
+  pp decrementers
+  p binary.count
   #p binary.join
-  #pp packet
+  p packet
   ##break
-  #STDIN.gets("\n")  # Step each loop by pressing enter
+  STDIN.gets("\n")  # Step each loop by pressing enter
 end
 
 # DEBUG
-#puts
-#p decrementers
-#pp packets
-#puts
+puts
+pp decrementers
+p binary.count
+pp packets
+puts
 
 
 ## ANSWER
