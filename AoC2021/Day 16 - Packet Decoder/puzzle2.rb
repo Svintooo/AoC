@@ -35,9 +35,27 @@ loop do
     decr = decrementers.pop
 
     $stderr.puts "WARN: decrementer count < 0" if decr[:count] < 0
+    if decr[:count] < 0 #DEBUG
+      table = [:sum,:pro,:min,:max,:val,:grt,:lst,:eq]
+      #inc = 0
+      queue = [ [0,packets[0]] ]
+      while (inc,pkt = queue.shift)
+        print "".ljust(inc*2)
+        pkt[:type_id]
+        pkt[:length_type_id]
+        pkt[:sub_packets_lenght]
+        pkt[:number_of_sub_packets]
+        puts "- #{table[pkt[:type_id]]}: #{pkt[:value].inspect}, #{(pkt[:length_type_id]==0)?("b"):("")}#{(pkt[:sub_packets_lenght])?(pkt[:sub_packets_lenght]):(pkt[:number_of_sub_packets])}"
+        pkt[:sub_packets].reverse_each{|o| queue.unshift [inc+1,o] } if pkt[:sub_packets]
+      end
+      exit
+    end #DEBUG
+
     packet = packets[ decr[:packet_index] ]
     #print"#";p([packets.count, decr[:packet_index], packets.count - decr[:packet_index] - 1]) #DEBUG
-    packet[:sub_packets] = packets.pop(packets.count - decr[:packet_index] - 1)
+
+    #packet[:sub_packets] = packets.pop(packets.count - decr[:packet_index] - 1)
+     packets.pop(packets.count - decr[:packet_index] - 1)
 
     packet[:value] = packet[:sub_packets].map{|pkt| pkt[:value] }
     print"#";p [packet[:type_id],packet[:value]] #DEBUG
@@ -67,6 +85,11 @@ loop do
   break if binary.length < 11
 
   packet = {}
+  if !decrementers.empty?
+    pkt = packets[ decrementers[-1][:packet_index] ]
+    pkt[:sub_packets] ||= []
+    pkt[:sub_packets] << packet
+  end
   packet[:version] = binary.shift(3).join.to_i(2)
   packet[:type_id] = binary.shift(3).join.to_i(2)
   decrementers.select{|d| d[:type] == "bits" }.each{|d| d[:count] -= 6 }
@@ -96,28 +119,30 @@ loop do
           decrementers.select{|d| d[:type] == "bits" }.each{|d| d[:count] -= 15 }
 
           bits_to_take << {packet_index: packets.count, count: packet[:sub_packets_lenght]}
-          decrementers << {type: "bits", packet_index: packets.count, count: packet[:sub_packets_lenght]}
+          decrementers << {packet_index: packets.count, count: packet[:sub_packets_lenght], type: "bits"}
         when 1
           packet[:number_of_sub_packets] = binary.shift(11).join.to_i(2)
           decrementers.select{|d| d[:type] == "bits" }.each{|d| d[:count] -= 11 }
 
-          decrementers << {type: "packets", packet_index: packets.count, count: packet[:number_of_sub_packets]+1}
+          decrementers << {packet_index: packets.count, count: packet[:number_of_sub_packets]+1, type: "pkts"}
         #when end
       end
     #when end
   end
 
-  decrementers.select{|d| d[:type] == "packets" }.each{|d| d[:count] -= 1 }
+  #decrementers.select{|d| d[:type] == "pkts" }.each{|d| d[:count] -= 1 }
+  decrementers.select{|d| d[:type] == "pkts" }.last[:count] -= 1
   packets << packet
 
   # DEBUG
-  puts
-  pp decrementers
+  #puts
+  #pp decrementers
   p binary.count
-  #p binary.join
-  p packet
-  ##break
-  STDIN.gets("\n")  # Step each loop by pressing enter
+  ##p binary.join
+  #p packet
+  ###break
+  #puts
+  #STDIN.gets("\n")  # Step each loop by pressing enter
 end
 
 # DEBUG
