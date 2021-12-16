@@ -26,7 +26,22 @@ packets_to_find = []
 
 loop do
   if !bits_to_take.empty? && bits_to_take[-1][:count] <= 0
+    o = bits_to_take.pop
+    $stderr.puts "WARN: bits_to_take < 0" if o[:count] < 0
+    packet = packets[ o[:packet_index] ]
+    packet[:sub_packets] = packets[ (o[:packet_index]+1)..-1 ]
+    packet[:sub_packets] = packets.pop(packets.count - o[:packet_index] - 1)
 
+    case
+      when '0' #sum
+      when '1' #product
+      when '2' #minimum
+      when '3' #maximum
+      when '5' #greater than
+      when '6' #less than
+      when '7' #equal to
+      #end when
+    end
   end
 
   bits_to_take.pop while !bits_to_take.empty?    && bits_to_take   [-1][:count]    <= 0
