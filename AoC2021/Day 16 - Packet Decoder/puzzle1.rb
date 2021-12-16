@@ -18,7 +18,7 @@ hexadecimal = data.strip
 ## CALCULATE
 #binary = hexadecimal.to_i(16).to_s(2).chars#.map(&:to_i)
 binary = hexadecimal.chars.map{|hex| hex.to_i(16).to_s(2).rjust(4,'0') }.join.chars#.map(&:to_i)
-p binary.join #DEBUG
+#p binary.join #DEBUG
 
 packets = []
 bits_to_take = []
@@ -72,17 +72,17 @@ loop do
   packets << packet
 
   # DEBUG
-  puts
-  pp packet
-  p binary.join
+  #puts
+  #pp packet
+  #p binary.join
   #break
 end
 
 # DEBUG
-puts
-puts "   bits_to_take: #{bits_to_take   .inspect}"
-puts "packets_to_find: #{packets_to_find.inspect}"
-pp packets
+#puts
+#puts "   bits_to_take: #{bits_to_take   .inspect}"
+#puts "packets_to_find: #{packets_to_find.inspect}"
+#pp packets
 
 
 ## ANSWER
