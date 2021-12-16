@@ -85,6 +85,7 @@ loop do
   break if binary.length < 11
 
   packet = {}
+  decrementers.last.yield_self{|d| d[:count] -= 1 if d[:type] == "pkts" } if !decrementers.empty?
   if !decrementers.empty?
     pkt = packets[ decrementers[-1][:packet_index] ]
     pkt[:sub_packets] ||= []
@@ -124,14 +125,15 @@ loop do
           packet[:number_of_sub_packets] = binary.shift(11).join.to_i(2)
           decrementers.select{|d| d[:type] == "bits" }.each{|d| d[:count] -= 11 }
 
-          decrementers << {packet_index: packets.count, count: packet[:number_of_sub_packets]+1, type: "pkts"}
+          decrementers << {packet_index: packets.count, count: packet[:number_of_sub_packets], type: "pkts"}
         #when end
       end
     #when end
   end
 
   #decrementers.select{|d| d[:type] == "pkts" }.each{|d| d[:count] -= 1 }
-  decrementers.select{|d| d[:type] == "pkts" }.last[:count] -= 1
+  #decrementers.select{|d| d[:type] == "pkts" }.last[:count] -= 1
+  #decrementers.last.yield_self{|d| d[:count] -= 1 if d[:type] == "pkts" }
   packets << packet
 
   # DEBUG
