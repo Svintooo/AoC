@@ -35,34 +35,26 @@ loop do
     decr = decrementers.pop
 
     $stderr.puts "WARN: decrementer count < 0" if decr[:count] < 0
-    if decr[:count] < 0 #DEBUG
-      table = [:sum,:pro,:min,:max,:val,:grt,:lst,:eq]
-      #inc = 0
-      queue = [ [0,packets[0]] ]
-      while (inc,pkt = queue.shift)
-        print "".ljust(inc*2)
-        pkt[:type_id]
-        pkt[:length_type_id]
-        pkt[:sub_packets_lenght]
-        pkt[:number_of_sub_packets]
-        puts "- #{table[pkt[:type_id]]}: #{pkt[:value].inspect}, #{(pkt[:length_type_id]==0)?("b"):("")}#{(pkt[:sub_packets_lenght])?(pkt[:sub_packets_lenght]):(pkt[:number_of_sub_packets])}"
-        pkt[:sub_packets].reverse_each{|o| queue.unshift [inc+1,o] } if pkt[:sub_packets]
-      end
-      exit
-    end #DEBUG
+    #if decr[:count] < 0 #DEBUG
+    #  table = [:sum,:pro,:min,:max,:val,:grt,:lst,:eq]
+    #  #inc = 0
+    #  queue = [ [0,packets[0]] ]
+    #  while (inc,pkt = queue.shift)
+    #    print "".ljust(inc*2)
+    #    pkt[:type_id]
+    #    pkt[:length_type_id]
+    #    pkt[:sub_packets_lenght]
+    #    pkt[:number_of_sub_packets]
+    #    puts "- #{table[pkt[:type_id]]}: #{pkt[:value].inspect}, #{(pkt[:length_type_id]==0)?("b"):("")}#{(pkt[:sub_packets_lenght])?(pkt[:sub_packets_lenght]):(pkt[:number_of_sub_packets])}"
+    #    pkt[:sub_packets].reverse_each{|o| queue.unshift [inc+1,o] } if pkt[:sub_packets]
+    #  end
+    #  exit
+    #end #DEBUG
 
     packet = packets[ decr[:packet_index] ]
-    #print"#";p([packets.count, decr[:packet_index], packets.count - decr[:packet_index] - 1]) #DEBUG
-
-    #packet[:sub_packets] = packets.pop(packets.count - decr[:packet_index] - 1)
-     packets.pop(packets.count - decr[:packet_index] - 1)
+    packets.pop(packets.count - decr[:packet_index] - 1)
 
     packet[:value] = packet[:sub_packets].map{|pkt| pkt[:value] }
-    print"#";p [packet[:type_id],packet[:value]] #DEBUG
-    if packet[:value].include?(nil) #DEBUG
-      print"#";p packet[:sub_packets]
-      print"#";pp(decrementers + [decr])
-    end #DEBUG
     case packet[:type_id]
       when 0 #sum
         packet[:value] = packet[:value].sum
