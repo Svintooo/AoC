@@ -25,18 +25,18 @@ bits_to_take = []
 packets_to_find = []
 
 loop do
-  if !bits_to_take.empty?    && bits_to_take.last    <= 0
+  if !bits_to_take.empty? && bits_to_take[-1][:count] <= 0
 
   end
 
-  bits_to_take.pop while !bits_to_take.empty?    && bits_to_take.last    <= 0
-  packets_to_find  while !packets_to_find.empty? && packets_to_find.last <= 0
+  bits_to_take.pop while !bits_to_take.empty?    && bits_to_take   [-1][:count]    <= 0
+  packets_to_find  while !packets_to_find.empty? && packets_to_find[-1][:count] <= 0
   break if binary.length < 11
 
   packet = {}
   packet[:version] = binary.shift(3).join.to_i(2)
   packet[:type_id] = binary.shift(3).join.to_i(2)
-  bits_to_take[-1] -= 6 unless bits_to_take.empty?
+  bits_to_take[-1][:count] -= 6 unless bits_to_take.empty?
   #pp packet #DEBUG
 
   case packet[:type_id]
@@ -45,7 +45,7 @@ loop do
 
       loop do
         bits = binary.shift(5)
-        bits_to_take[-1] -= 5 unless bits_to_take.empty?
+        bits_to_take[-1][:count] -= 5 unless bits_to_take.empty?
 
         packet[:value] << bits[1..-1].join
 
@@ -55,25 +55,25 @@ loop do
       packet[:value] = packet[:value].join.to_i(2)
     else
       packet[:length_type_id] = binary.shift
-      bits_to_take[-1] -= 1 unless bits_to_take.empty?
+      bits_to_take[-1][:count] -= 1 unless bits_to_take.empty?
 
       case packet[:length_type_id]
         when '0'
           packet[:sub_packets_lenght] = binary.shift(15).join.to_i(2)
-          bits_to_take[-1] -= 15 unless bits_to_take.empty?
+          bits_to_take[-1][:count] -= 15 unless bits_to_take.empty?
 
-          bits_to_take << packet[:sub_packets_lenght]
+          bits_to_take << {packet_index: packets.count, count: packet[:sub_packets_lenght]}
         when '1'
           packet[:number_of_sub_packets] = binary.shift(11).join.to_i(2)
-          bits_to_take[-1] -= 11 unless bits_to_take.empty?
+          bits_to_take[-1][:count] -= 11 unless bits_to_take.empty?
 
-          packets_to_find << packet[:number_of_sub_packets]
+          packets_to_find << {packet_index: packets.count, count: packet[:number_of_sub_packets]}
         #when end
       end
     #when end
   end
 
-  packets_to_find[-1] -= 11 unless packets_to_find.empty?
+  packets_to_find[-1][:count] -= 11 unless packets_to_find.empty?
   packets << packet
 
   # DEBUG
