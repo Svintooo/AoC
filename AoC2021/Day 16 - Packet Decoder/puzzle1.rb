@@ -55,12 +55,12 @@ loop do
 
       case packet[:length_type_id]
         when '0'
-          packet[:sub_packets_lenght] = binary.shift(15).join.to_i
+          packet[:sub_packets_lenght] = binary.shift(15).join.to_i(2)
           bits_to_take[-1] -= 15 unless bits_to_take.empty?
 
           bits_to_take << packet[:sub_packets_lenght]
         when '1'
-          packet[:number_of_sub_packets] = binary.shift(11).join.to_i
+          packet[:number_of_sub_packets] = binary.shift(11).join.to_i(2)
           bits_to_take[-1] -= 11 unless bits_to_take.empty?
 
           packets_to_find << packet[:number_of_sub_packets]
@@ -86,5 +86,5 @@ pp packets
 
 
 ## ANSWER
-answer = nil
+answer = packets.map{|packet| packet[:version] }.sum
 puts answer
