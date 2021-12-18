@@ -2,9 +2,8 @@
 
 
 ## INPUT
-data = File.exists?(ARGV[0]) \
-     ? ARGF.read \
-     : ARGV[0]
+data = File.exists?(ARGV[0]) ? ARGF.read \
+                             : ARGV[0]
 
 
 ## PARSING
@@ -21,15 +20,21 @@ p target #DEBUG
 
 
 ## HELP CODE
-def x_pos(t,v)
+def pos_x(t, v)
   negate = v < 0
   v = -v if negate
 
-  #
+  x = (t <= v) ? ( v*t - (t**2)/2 - t/2 ) \
+               : ( (v**2)/2 - v/2 )
 
   x = -x if negate
   return x
 end
+
+def pos_y(t, v)
+  v*t - (t**2)/2 - t/2
+end
+
 
 ## CHECK
 
