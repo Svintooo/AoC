@@ -36,10 +36,13 @@ A: start velocity
 ```
 
 
-## Start velocity V (for X)
+## Start velocities (for X and Y)
 ```
-    targets: T = [20..30]
-possible Vs: Vs = T +
+     targets: Tx  = [20..30]   # Example
+              Ty  = [-10..-5]  # Example
 
+possible Vts: Vts = all [V,t] where t=V..1 and V=30..1 and x(t)=30..20
+                  = all [V,t] where t=V..1 and V=(Tx.max)..1 and x(t)=(Tx.max)..(Tx.min)
 
+possible Ats: Ats = all [A,t] where t in Vts and
 ```
