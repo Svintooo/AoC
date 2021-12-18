@@ -14,8 +14,8 @@ velocity: x'  = V - t     if t <= V
               = 0         if t >= V
 position: x   = Vt - ½t²  if t <= V         # This would've been correct if we weren't
               = ½V²       if t >= V         # stepping.
-position: x   = Vt - t²/2 - t/2  if t <= V  # This is the correct formula for the simulation
-              = V²/2 - V/2       if t >= V  # we do in this puzzle.
+position: x   = Vt - (t² - t)/2  if t <= V  # This is the correct formula for the simulation
+              = (V² + V)/2       if t >= V  # we do in this puzzle.
 t: time (step)
 V: start velocity
 ```
@@ -26,7 +26,7 @@ V: start velocity
 accelrtn: y'' = -1
 velocity: y'  = A - t
 position: y   = At - ½t²         # Nope (see X)
-position: y   = At - t²/2 - t/2  # Yes  (see X)
+position: y   = At - (t² - t)/2  # Yes  (see X)
 t: time (step)
 A: start velocity
 ```
