@@ -8,13 +8,15 @@ data = File.exists?(ARGV[0]) \
 
 
 ## PARSING
-target = data.gsub("target area: ")
+target = data.gsub("target area: ","")
              .split(/, */)
              .map{|str|
-               str.split('=')
+               str = str.split('=')
                str[-1] = str[-1].split('..')
                                 .map(&:to_i)
+                                .sort
              }
+             .yield_self{|d| [:xr,:yr].zip(d).to_h }
 p target #DEBUG
 
 
