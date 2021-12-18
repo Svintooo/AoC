@@ -42,7 +42,8 @@ A: start velocity
               Ty  = [-10..-5]  # Example
 
 possible Vts: Vts = all [V,t] where t=V..1 and V=30..1 and x(t)=30..20
-                  = all [V,t] where t=V..1 and V=(Tx.max)..1 and x(t)=(Tx.max)..(Tx.min)
+                  = all [V,t] where t=V..1 and V=(Tx.last)..1 and x(t)=(Tx.last)..(Tx.first)
 
-possible Ats: Ats = all [A,t] where t in Vts and
+possible Ats: Ats = all [A,t] where t in Vts and A=1..? and y(t)=-10..-5
+                  = all [A,t] where t in Vts and A=1..? and y(t)=(Ty.last)..(Ty.first)
 ```
