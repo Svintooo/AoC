@@ -21,20 +21,20 @@ p target #DEBUG
 
 
 ## HELP CODE
-def x_pos(t, v)
-  negate = v < 0
-  v = -v if negate
+def x_pos(step, velo)
+  negate = velo < 0
+  velo = -velo if negate
 
-  x = (t <= v)  \
-      ? v*t - (t**2 - t)/2  \
-      : v*v - (v**2 - v)/2
+  x = (step <= velo)  \
+      ? velo*step - (step**2 - step)/2  \
+      : velo*velo - (velo**2 - velo)/2
 
   x = -x if negate
   return x
 end
 
-def y_pos(t, v)
-  v*t - (t**2 - t)/2
+def y_pos(step, velo)
+  velo*step - (step**2 - step)/2
 end
 
 
