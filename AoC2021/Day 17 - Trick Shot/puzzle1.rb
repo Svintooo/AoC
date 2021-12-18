@@ -21,7 +21,15 @@ p target #DEBUG
 
 
 ## HELP CODE
+def x_pos(t,v)
+  negate = v < 0
+  v = -v if negate
 
+  #
+
+  x = -x if negate
+  return x
+end
 
 ## CHECK
 
