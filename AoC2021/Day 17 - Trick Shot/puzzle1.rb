@@ -44,27 +44,34 @@ end
 ## CALCULATE
 solutions = []
 
-#all [V,t] where t=V..1 and V=(Tx.last)..1 and x(t)=(Tx.last)..(Tx.first)
-x_solutions = []
-#TODO: support for negative values in target[:x]
-1.upto(target[:x].last).each do |x_velocity| #V=(Tx.last)..1
-  1.upto(x_velocity).each do |step| #t=V..1
-    x = x_pos(step, x_velocity)
-    x_solution = [step, x_velocity]
-    x_solutions << x_solution if x >= target[:x].first && x <= target[:x].last
-  end
-end
-#pp x_solutions #DEBUG
+x_enumerator = if target[:x].all?{|x| x >= 0}
+                 0..target[:x].max
+               elsif target[:x].all?{|x| x < 0}
+                 target[:x].min..0
+               else
+                 target[:x].min..target[:x].max
+               end
 
-#all [A,t] where t in Vts and A=1..t and y(t)=(Ty.last)..(Ty.first)
-x_solutions.each do |step, x_velocity| #t in Vts
-  1.upto(step) do |y_velocity| #A=1..t
-    y = y_pos(step, y_velocity)
-    solution = [step, x_velocity, y_velocity]
-    solutions << solution if y >= target[:y].first && y <= target[:y].last
+#all [t,A] where t=1.. and A=1.. and y(t)=(Ty.last)..(Ty.first)
+catch :STOP do
+  x_enumerator.each do |x_velocity|
+    (0..).each do |y_velocity|
+      break if x_velocity >= 0 && x_pos(y_velocity, x_velocity) >= target[:x].max
+      break if x_velocity <  0 && x_pos(y_velocity, x_velocity) >= target[:x].min
+      (0..).each do |step|
+        x = x_pos(step, x_velocity)
+        y = y_pos(step, y_velocity)
+        break if x > target[:x].max && x_velocity >= 0
+        break if x < target[:x].min && x_velocity <  0
+        break if y > target[:y].min
+      end
+    end
   end
 end
+
+
 pp solutions #DEBUG
+p [x_pos(4,9), y_pos(4,0)] #DEBUG
 
 
 ## ANSWER
