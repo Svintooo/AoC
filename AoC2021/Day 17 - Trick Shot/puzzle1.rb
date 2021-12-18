@@ -2,8 +2,9 @@
 
 
 ## INPUT
-data = File.exists?(ARGV[0]) ? ARGF.read \
-                             : ARGV[0]
+data = File.exists?(ARGV[0])  \
+       ? ARGF.read \
+       : ARGV[0]
 
 
 ## PARSING
@@ -58,6 +59,22 @@ end
 #p Position.new( 5,:x).position(3)  #  12
 #p Position.new(-5,:x).position(3)  # -12
 
+def pos_x(v, t)
+  negate = v < 0
+  v = -v if negate
+
+  x = (t <= v)  \
+      ? v*t - (t**2 - t)/2  \
+      : (v**2 - v)/2
+
+  x = -x if negate
+  return x
+end
+
+def pos_y(v, t)
+  v*t - (t**2 - t)/2
+end
+
 
 ## CHECK
 
@@ -65,8 +82,11 @@ end
 ## CALCULATE
 #all [V,t] where t=V..1 and V=(Tx.last)..1 and x(t)=(Tx.last)..(Tx.first)
 x_v_t = []
-target[:x][0].upto(target[:x][1]).each do |x_target|
-  #
+1.upto(x_target).each do |velocity|
+  1.upto(velocity).each do |step|
+    x = x_pos(velocity,step)
+    x_v_t << [velocity,step] if x >= target[:x][0] && x <= target[:x][1]
+  end
 end
 
 
