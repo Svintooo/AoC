@@ -3,9 +3,10 @@
 
 
 ## INPUT
-data = File.exists?(ARGV[0])  \
-       ? ARGF.read \
-       : ARGV[0]
+data = case when File.exists?(ARGV[0])
+            then ARGF.read
+            else ARGV[0]
+            end
 
 
 ## PARSING
@@ -26,9 +27,10 @@ def x_pos(step, velo)
   negate = velo < 0
   velo = -velo if negate
 
-  x = (step <= velo)  \
-      ? velo*step - (step**2 - step)/2  \
-      : velo*velo - (velo**2 - velo)/2
+  x = case when step <= velo
+           then velo*step - (step**2 - step)/2
+           else velo*velo - (velo**2 - velo)/2
+           end
 
   x = -x if negate
   return x
@@ -91,5 +93,7 @@ end
 
 ## ANSWER
 answer = solutions.map{|_,y_velocity,_| y_velocity }.max
-                  .yield_self{|y_velocity| y_pos(y_velocity, y_velocity) }
+                  .yield_self{|y_velocity|
+                    y_pos(y_velocity, y_velocity)
+                  }
 puts answer
