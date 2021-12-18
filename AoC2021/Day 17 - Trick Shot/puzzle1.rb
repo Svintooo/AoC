@@ -42,30 +42,32 @@ end
 
 
 ## CALCULATE
+solutions = []
 
 #all [V,t] where t=V..1 and V=(Tx.last)..1 and x(t)=(Tx.last)..(Tx.first)
-x_v_t = []
+x_solutions = []
 #TODO: support for negative values in target[:x]
-1.upto(target[:x].last).each do |velocity| #V=(Tx.last)..1
-  1.upto(velocity).each do |step| #t=V..1
-    x = x_pos(step, velocity)
-    x_v_t << [step, velocity] if x >= target[:x].first && x <= target[:x].last
+1.upto(target[:x].last).each do |x_velocity| #V=(Tx.last)..1
+  1.upto(x_velocity).each do |step| #t=V..1
+    x = x_pos(step, x_velocity)
+    x_solution = [step, x_velocity]
+    solutions << x_solution if x >= target[:x].first && x <= target[:x].last
   end
 end
-#pp x_v_t #DEBUG
+#pp solutions #DEBUG
 
 #all [A,t] where t in Vts and A=1..t and y(t)=(Ty.last)..(Ty.first)
-y_v_t = []
-x_v_t.each do |step,_| #t in Vts
-  1.upto(step) do |velocity| #A=1..t
-    y = y_pos(step, velocity)
-    y_v_t << [step, velocity] if y >= target[:y].first && y <= target[:y].last
+solutions.each do |step, x_velocity| #t in Vts
+  1.upto(step) do |y_velocity| #A=1..t
+    y = y_pos(step, y_velocity)
+    solution = [step, x_velocity, y_velocity]
+    solutions << solution if y >= target[:y].first && y <= target[:y].last
   end
 end
 #pp y_v_t #DEBUG
 
 
 ## ANSWER
-answer = y_v_t.map{|_,velocity| velocity }.max
-              .yield_self{|velocity| y_pos(velocity,velocity) }
+answer = solutions.map{|_,_,y_velocity| y_velocity }.max
+              .yield_self{|y_velocity| y_pos(y_velocity, y_velocity) }
 puts answer
