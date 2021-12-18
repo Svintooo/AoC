@@ -17,7 +17,7 @@ accelrtn: x"= -1               if t <= V
 velocity: x'= V - t            if t <= V
             = 0                if t >= V
 position: x = Vt - t²/2        if t <= V  # This would've been the correct formula if we weren't
-            = V²/2             if t >= V  # stepping (velocity change only on each step).
+            = V²/2             if t >= V  # stepping.
 position: x = Vt - (t² - t)/2  if t <= V  # This is the correct formula for the simulation that
             = (V² + V)/2       if t >= V  # is done in this puzzle.
 ```
@@ -30,7 +30,7 @@ start velocity: V
 
 accelrtn: y"= -1
 velocity: y'= V - t
-position: y = Vt - ½t²         # Nope (see X)
+position: y = Vt - t²/2        # Nope (see X)
 position: y = Vt - (t² - t)/2  # Yes  (see X)
    y = 0: t = 2V + 1
 ```
@@ -46,10 +46,11 @@ p"= -1
   = -1*t⁰
   = (-1  )t⁰
 P'= (-1/1)t¹ + Vt⁰
-  = -1*t¹ + Vt⁰
-  =   -t  + V
+  =    -1*t¹ + Vt⁰
+  =      -t  + V
   = -t + V
   = V - t
+  =     V   -      t
   =     Vt⁰ -      t¹
   = (V  )t⁰ - (2  )t¹/2
 p = (V/1)t¹ - (2/2)t²/2
@@ -91,8 +92,8 @@ p = V*V - (V²-V)/2
   = (V² + V)/2
 ```
 
-### When position is <= 0
-Find the steps where the position p = 0.
+### When is position = 0
+Find the steps t where position p = 0.
 ```
 p = Vt - (t² - t)/2
 0 = Vt - (t² - t)/2
