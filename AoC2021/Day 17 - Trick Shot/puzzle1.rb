@@ -52,18 +52,18 @@ x_enumerator = if target[:x].all?{|x| x >= 0}
                  target[:x].min..target[:x].max
                end
 
-#all [t,A] where t=1.. and A=1.. and y(t)=(Ty.last)..(Ty.first)
 catch :STOP do
   x_enumerator.each do |x_velocity|
     (0..).each do |y_velocity|
-      break if x_velocity >= 0 && x_pos(y_velocity, x_velocity) >= target[:x].max
-      break if x_velocity <  0 && x_pos(y_velocity, x_velocity) >= target[:x].min
+      x = x_pos(y_velocity, x_velocity)
+      break if x_velocity >= 0 && x >= target[:x].max
+      break if x_velocity <  0 && x >= target[:x].min
       (0..).each do |step|
         x = x_pos(step, x_velocity)
         y = y_pos(step, y_velocity)
-        break if x > target[:x].max && x_velocity >= 0
-        break if x < target[:x].min && x_velocity <  0
-        break if y > target[:y].min
+        break if x_velocity >= 0 && x > target[:x].max
+        break if x_velocity <  0 && x < target[:x].min
+        break if                    y > target[:y].min
       end
     end
   end
