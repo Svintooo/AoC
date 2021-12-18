@@ -21,7 +21,7 @@ p target #DEBUG
 
 
 ## HELP CODE
-def x_pos(v, t)
+def x_pos(t, v)
   negate = v < 0
   v = -v if negate
 
@@ -33,7 +33,7 @@ def x_pos(v, t)
   return x
 end
 
-def y_pos(v, t)
+def y_pos(t, v)
   v*t - (t**2 - t)/2
 end
 
@@ -48,24 +48,24 @@ x_v_t = []
 #TODO: support for negative values in target[:x]
 1.upto(target[:x].last).each do |velocity| #V=(Tx.last)..1
   1.upto(velocity).each do |step| #t=V..1
-    x = x_pos(velocity, step)
-    x_v_t << [velocity, step] if x >= target[:x].first && x <= target[:x].last
+    x = x_pos(step, velocity)
+    x_v_t << [step, velocity] if x >= target[:x].first && x <= target[:x].last
   end
 end
 #pp x_v_t #DEBUG
 
 #all [A,t] where t in Vts and A=1..t and y(t)=(Ty.last)..(Ty.first)
 y_v_t = []
-x_v_t.each do |_,step| #t in Vts
+x_v_t.each do |step,_| #t in Vts
   1.upto(step) do |velocity| #A=1..t
-    y = y_pos(velocity, step)
-    y_v_t << [velocity, step] if y >= target[:y].first && y <= target[:y].last
+    y = y_pos(step, velocity)
+    y_v_t << [step, velocity] if y >= target[:y].first && y <= target[:y].last
   end
 end
 #pp y_v_t #DEBUG
 
 
 ## ANSWER
-answer = y_v_t.map{|velocity,_| velocity }.max
+answer = y_v_t.map{|_,velocity| velocity }.max
               .yield_self{|velocity| y_pos(velocity,velocity) }
 puts answer
