@@ -9,9 +9,9 @@ data = case when File.exists?(ARGV[0])
 
 
 ## PARSING
-numbers = data.lines.map(&:strip)
-              .map{|line| JSON.parse(line) }
-#pp numbers
+numbers_list = data.lines.map(&:strip)
+                   .map{|line| JSON.parse(line) }
+#pp numbers_list
 
 
 ## HELP CODE
@@ -26,6 +26,8 @@ end
 
 
 ## CALCULATE
+numbers_list.each do |numbers|
+end
 
 
 ## ANSWER
