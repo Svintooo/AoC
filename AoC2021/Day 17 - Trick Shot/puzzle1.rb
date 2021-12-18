@@ -54,8 +54,8 @@ end
 pp x_v_t #DEBUG
 
 #all [A,t] where t in Vts and A=1..t and y(t)=(Ty.last)..(Ty.first)
-x_v_t.each do |_,step|
-  1.upto(step) do |velocity|
+x_v_t.each do |_,step| #t in Vts
+  1.upto(step) do |velocity| #A=1..t
     #
   end
 end
