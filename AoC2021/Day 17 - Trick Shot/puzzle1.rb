@@ -16,7 +16,7 @@ target = data.gsub("target area: ","")
                                 .map(&:to_i)
                                 .sort
              }
-             .yield_self{|d| [:xr,:yr].zip(d).to_h }
+             .yield_self{|d| [:x,:y].zip(d).to_h }
 p target #DEBUG
 
 
@@ -59,7 +59,7 @@ end
 #p Position.new( 5,:x).position(3)  #  12
 #p Position.new(-5,:x).position(3)  # -12
 
-def pos_x(v, t)
+def x_pos(v, t)
   negate = v < 0
   v = -v if negate
 
@@ -71,7 +71,7 @@ def pos_x(v, t)
   return x
 end
 
-def pos_y(v, t)
+def y_pos(v, t)
   v*t - (t**2 - t)/2
 end
 
@@ -82,10 +82,10 @@ end
 ## CALCULATE
 #all [V,t] where t=V..1 and V=(Tx.last)..1 and x(t)=(Tx.last)..(Tx.first)
 x_v_t = []
-1.upto(x_target).each do |velocity|
+1.upto(target[:x].last).each do |velocity|
   1.upto(velocity).each do |step|
     x = x_pos(velocity,step)
-    x_v_t << [velocity,step] if x >= target[:x][0] && x <= target[:x][1]
+    x_v_t << [velocity,step] if x >= target[:x].first && x <= target[:x].last
   end
 end
 
