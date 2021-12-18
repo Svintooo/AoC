@@ -37,11 +37,21 @@ A: start velocity
      targets: Tx  = [20..30]   # Example
               Ty  = [-10..-5]  # Example
 
-possible Vts: Vts = all [V,t] where t=V..1 and V=30..1 and x(t)=30..20
+possible Vts: Vts = all [V,t] where t=V..1 and V=30..1        and x(t)=30..20
                   = all [V,t] where t=V..1 and V=(Tx.last)..1 and x(t)=(Tx.last)..(Tx.first)
 
 possible Ats: Ats = all [A,t] where t in Vts and A=1..t and y(t)=-10..-5
                   = all [A,t] where t in Vts and A=1..t and y(t)=(Ty.last)..(Ty.first)
+```
+```
+     targets: Ty  = [-10..-5]  # Example
+              Tx  = [20..30]   # Example
+
+possible Ats: Ats = all [t,A] where t=1.. and A=1.. and y(t)=-10..-5
+                  = all [t,A] where t=1.. and A=1.. and y(t)=(Ty.last)..(Ty.first)
+
+possible Vts: Vts = all [t,V] where t=1.. and V=1..30        and x(t)=30..20
+                  = all [t,V] where t=1.. and V=1..(Tx.last) and x(t)=(Tx.last)..(Tx.first)
 ```
 
 
