@@ -42,12 +42,21 @@ end
 
 
 ## CALCULATE
+
 #all [V,t] where t=V..1 and V=(Tx.last)..1 and x(t)=(Tx.last)..(Tx.first)
 x_v_t = []
-1.upto(target[:x].last).each do |velocity|
-  1.upto(velocity).each do |step|
+1.upto(target[:x].last).each do |velocity| #V=(Tx.last)..1
+  1.upto(velocity).each do |step| #t=V..1
     x = x_pos(velocity,step)
     x_v_t << [velocity,step] if x >= target[:x].first && x <= target[:x].last
+  end
+end
+pp x_v_t #DEBUG
+
+#all [A,t] where t in Vts and A=1..t and y(t)=(Ty.last)..(Ty.first)
+x_v_t.each do |_,step|
+  1.upto(step) do |velocity|
+    #
   end
 end
 
