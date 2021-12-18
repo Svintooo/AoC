@@ -10,10 +10,15 @@ example target: x=20..30, y=-10..-5
 ## X
 ```
 accelrtn: x'' = -1
-velocity: x'  = -t + V    if t <= V
+velocity: x'  = V - t     if t <= V
               = 0         if t >= V
-position: x   = -½t² + Vt if t <= V
-              = ½V²       if t >= V
+position: x   = Vt - ½t²  if t <= V     # This would've been correct
+              = ½V²       if t >= V     # if we weren't stepping.
+position: x   = V+(V-1)+(V-2)+...+(V-(t-1)) if t < V
+              = V+ V-1 + V-2 +...+ V-(t-1)
+              = Vt -1-2-...-(t-1)
+              = Vt - (t(t-1))/2         # This is the correct formula for the
+              = Vt - (t²-t)/2 if t < V  # simulation we do in this puzzle.
 t: time (step)
 V: start velocity
 NOTE: position (x) does not include `+ C`
@@ -24,8 +29,9 @@ NOTE: position (x) does not include `+ C`
 ## Y
 ```
 accelrtn: y'' = -1
-velocity: y'  = -t + A
-position: y   = -½t² + At
+velocity: y'  = A - t
+position: y   = At - ½t²
+position: y   = At - (t²-t)/2
 t: time (step)
 A: start velocity
 NOTE: position (y) does not include `+ C`
@@ -39,14 +45,4 @@ NOTE: position (y) does not include `+ C`
 possible Vs: Vs = T +
 
 
-x = V+(V-1)+(V-2)+...+(V-(t-1))+(V-t) if t <= V
-  = V+ V-1 + V-2 +...+ V-(t-1) + V-t
-  = V(t+1) -1-2-...-(t-1)-t
-  = V(t+1) - (t*(t+1))/2
-
-x = V+(V-1)+(V-2)+...+(V-(t-1)) if t < V
-  = V+ V-1 + V-2 +...+ V-(t-1)
-  = Vt -1-2-...-(t-1)
-  = Vt - (t(t-1))/2
-  = Vt - (t²-t)/2
 ```
