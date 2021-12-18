@@ -63,6 +63,11 @@ end
 
 
 ## CALCULATE
+#all [V,t] where t=V..1 and V=(Tx.last)..1 and x(t)=(Tx.last)..(Tx.first)
+x_v_t = []
+target[:x][0].upto(target[:x][1]).each do |x_target|
+  #
+end
 
 
 ## ANSWER
