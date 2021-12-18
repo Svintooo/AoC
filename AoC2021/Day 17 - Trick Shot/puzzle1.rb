@@ -8,11 +8,14 @@ data = File.exists?(ARGV[0]) \
 
 
 ## PARSING
-asdf = data.gsub("target area: ")
-           .split(/, */)
-           .map{|xs,ys|
-             #
-           }
+target = data.gsub("target area: ")
+             .split(/, */)
+             .map{|str|
+               str.split('=')
+               str[-1] = str[-1].split('..')
+                                .map(&:to_i)
+             }
+p target #DEBUG
 
 
 ## HELP CODE
