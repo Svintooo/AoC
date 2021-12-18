@@ -6,15 +6,12 @@ start position: x=0, y=0
 example target: x=20..30, y=-10..-5
 
 
-
-
 ## x ##
 accelrtn: x'' = -1
 velocity: x'  = -t + B    if t <= B
               = 0         if t >= B
 position: x   = -½t² + Bt if t <= B
               = ½B²       if t >= B
-
 t: time (step)
 B: start velocity
 NOTE: position (x) does not include `+ C`
@@ -22,14 +19,17 @@ NOTE: position (x) does not include `+ C`
 #######
 
 
-
 ## y ##
 accelrtn: y'' = -1
 velocity: y'  = -t + P
 position: y   = -½t² + Bt
-
 t: time (step)
 P: start velocity
 NOTE: position (y) does not include `+ C`
       since start position it at 0.
 #######
+
+
+## start velocity (x) ##
+
+########################
