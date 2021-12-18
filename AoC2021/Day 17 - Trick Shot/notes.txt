@@ -1,46 +1,35 @@
 Trick Shot
 
- start: 0,0
-target: 20,-5 ; 30,10
+
+##
+start position: x=0, y=0
+example target: x=20..30, y=-10..-5
 
 
-## y ##
-position: y   = At² + Bt + C = -½t² + Bt + C
-velocity: y'  = 2At + B      = -1t  + B
-accelrtn: y'' = 2A           = -1
-start velocity ŷ: B
-#######
 
 
 ## x ##
-position: x   = Vt² + Pt + Q = -½t² + Pt + Q if x > 0
-                                ½t² + Pt + Q if x < 0
-                                0            if x = 0
-velocity: x'  = 2Vt + P      = -1t  + P if x > 0
-                                1t  + P if x < 0
-                                0       if x = 0
-accelrtn: x'' = 2V           = -1 if x > 0
-                                1 if x < 0
-                                0 if x = 0
-start velocity ẍ: P
+accelrtn: x'' = -1
+velocity: x'  = -t + B    if t <= B
+              = 0         if t >= B
+position: x   = -½t² + Bt if t <= B
+              = ½B²       if t >= B
+
+t: time (step)
+B: start velocity
+NOTE: position (x) does not include `+ C`
+      since start position it at 0.
 #######
 
 
-## xy ##
-(a+b)² = a² + 2ab + b²
-(a-b)² = a² - 2ab + b²
 
- -½t² + Bt + C = y
- -½t² + Bt     = y -  C
-(-½t² + Bt)*2 = (y -  C)*2
-  -t² + 2Bt   = 2y - 2C
-  -t² + 2Bt - B² = 2y - 2C - B²
- -(t² - 2Bt + B²)= 2y - 2C - B²
- -(t - B)² =  2y - 2C - B²
-  (t - B)² = -2y + 2C + B²
-   t - B   = ± √(-2y + 2C + B²)
-   t = B ± √(-2y + 2C + B²)
+## y ##
+accelrtn: y'' = -1
+velocity: y'  = -t + P
+position: y   = -½t² + Bt
 
-x = -½(B + √(-2y + 2C + B²))² + P(B + √(-2y + 2C + B²)) + Q
-y = -½(P + √(-2x + 2Q + P²))² + B(P + √(-2x + 2Q + P²)) + C
-########
+t: time (step)
+P: start velocity
+NOTE: position (y) does not include `+ C`
+      since start position it at 0.
+#######
