@@ -52,7 +52,7 @@ x_v_t = []
     x_v_t << [velocity, step] if x >= target[:x].first && x <= target[:x].last
   end
 end
-pp x_v_t #DEBUG
+#pp x_v_t #DEBUG
 
 #all [A,t] where t in Vts and A=1..t and y(t)=(Ty.last)..(Ty.first)
 y_v_t = []
@@ -62,8 +62,10 @@ x_v_t.each do |_,step| #t in Vts
     y_v_t << [velocity, step] if y >= target[:y].first && y <= target[:y].last
   end
 end
+#pp y_v_t #DEBUG
 
 
 ## ANSWER
-answer = nil
+answer = y_v_t.map{|velocity,_| velocity }.max
+              .yield_self{|velocity| y_pos(velocity,velocity) }
 puts answer
