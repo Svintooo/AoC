@@ -51,20 +51,20 @@ x_solutions = []
   1.upto(x_velocity).each do |step| #t=V..1
     x = x_pos(step, x_velocity)
     x_solution = [step, x_velocity]
-    solutions << x_solution if x >= target[:x].first && x <= target[:x].last
+    x_solutions << x_solution if x >= target[:x].first && x <= target[:x].last
   end
 end
-#pp solutions #DEBUG
+#pp x_solutions #DEBUG
 
 #all [A,t] where t in Vts and A=1..t and y(t)=(Ty.last)..(Ty.first)
-solutions.each do |step, x_velocity| #t in Vts
+x_solutions.each do |step, x_velocity| #t in Vts
   1.upto(step) do |y_velocity| #A=1..t
     y = y_pos(step, y_velocity)
     solution = [step, x_velocity, y_velocity]
     solutions << solution if y >= target[:y].first && y <= target[:y].last
   end
 end
-#pp y_v_t #DEBUG
+pp solutions #DEBUG
 
 
 ## ANSWER
