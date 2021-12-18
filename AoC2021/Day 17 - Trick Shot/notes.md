@@ -12,10 +12,10 @@ example target: x=20..30, y=-10..-5
 accelrtn: x'' = -1
 velocity: x'  = V - t     if t <= V
               = 0         if t >= V
-position: x   = Vt - ½t²  if t <= V         # This would've been correct
-              = ½V²       if t >= V         # if we weren't stepping.
-position: x   = Vt - t²/2 - t/2  if t <= V  # This is the correct formula for the
-              = V²/2 - V/2       if t >= V  # simulation we do in this puzzle.
+position: x   = Vt - ½t²  if t <= V         # This would've been correct if we weren't
+              = ½V²       if t >= V         # stepping.
+position: x   = Vt - t²/2 - t/2  if t <= V  # This is the correct formula for the simulation
+              = V²/2 - V/2       if t >= V  # we do in this puzzle.
 t: time (step)
 V: start velocity
 ```
