@@ -64,25 +64,27 @@ x_enumerator.each do |x_velocity|
   (puts".x1 #{[x_velocity]}" if DEBUG;next) if x > 0 && x < target[:x].min
   (puts".x2 #{[x_velocity]}" if DEBUG;next) if x < 0 && x > target[:x].max
   (puts".x3 #{[x_velocity]}" if DEBUG;next) if x == 0 && !(target[:x].min..target[:x].max).include?(x)
-  (0..).each do |y_velocity|
-    (puts".x.y1 #{[x_velocity,y_velocity]}" if DEBUG;next) if [x_velocity,y_velocity] == [0,0]
-    x = x_pos(y_velocity, x_velocity)
-    #puts;p([x_velocity,y_velocity,x]) #DEBUG
-    (puts".x.y2 #{[x_velocity,y_velocity]}" if DEBUG;break) if x > 0 && x >= target[:x].max &&
-    (puts".x.y3 #{[x_velocity,y_velocity]}" if DEBUG;break) if x < 0 && x <= target[:x].min
-    (puts".x.y4 #{[x_velocity,y_velocity]}" if DEBUG;next) if x == 0 && y_velocity != 0 && !(target[:x].min..target[:x].max).include?(x)
-    start_step = step_where_y_is_zero(y_velocity) + 1
-    (puts".x.y5 #{[x_velocity,y_velocity]}" if DEBUG;break) if y_pos(start_step, y_velocity) < target[:y].min
-    (start_step..).each do |step|
-      x = x_pos(step, x_velocity)
-      y = y_pos(step, y_velocity)
-      (puts".x.y.s1 #{[x_velocity,y_velocity,step,x,y]}" if DEBUG;break) if x > 0 && x > target[:x].max
-      (puts".x.y.s2 #{[x_velocity,y_velocity,step,x,y]}" if DEBUG;break) if x < 0 && x < target[:x].min
-      (puts".x.y.s3 #{[x_velocity,y_velocity,step,x,y]}" if DEBUG;break) if x == 0 && !(target[:x].min..target[:x].max).include?(x)
-      (puts".x.y.s4 #{[x_velocity,y_velocity,step,x,y]}" if DEBUG;break) if y < target[:y].min
-      (puts".x.y.s5 #{[x_velocity,y_velocity,step,x,y]}" if DEBUG;next) unless (target[:x].min..target[:x].max).include?(x)
-      (puts".x.y.s6 #{[x_velocity,y_velocity,step,x,y]}" if DEBUG;next) unless (target[:y].min..target[:y].max).include?(y)
-      solutions << [x_velocity, y_velocity, step]
+  [ 0.step(nil,+1), (-1).step(nil,-1) ].each do |y_enumerator|
+    y_enumerator.each do |y_velocity|
+      (puts".x.y1 #{[x_velocity,y_velocity]}" if DEBUG;next) if [x_velocity,y_velocity] == [0,0]
+      x = x_pos(y_velocity, x_velocity)
+      #puts;p([x_velocity,y_velocity,x]) #DEBUG
+      (puts".x.y2 #{[x_velocity,y_velocity]}" if DEBUG;break) if x > 0 && x >= target[:x].max &&
+      (puts".x.y3 #{[x_velocity,y_velocity]}" if DEBUG;break) if x < 0 && x <= target[:x].min
+      (puts".x.y4 #{[x_velocity,y_velocity]}" if DEBUG;next) if x == 0 && y_velocity != 0 && !(target[:x].min..target[:x].max).include?(x)
+      start_step = step_where_y_is_zero(y_velocity) + 1
+      (puts".x.y5 #{[x_velocity,y_velocity]}" if DEBUG;break) if y_pos(start_step, y_velocity) < target[:y].min
+      (start_step..).each do |step|
+        x = x_pos(step, x_velocity)
+        y = y_pos(step, y_velocity)
+        (puts".x.y.s1 #{[x_velocity,y_velocity,step,x,y]}" if DEBUG;break) if x > 0 && x > target[:x].max
+        (puts".x.y.s2 #{[x_velocity,y_velocity,step,x,y]}" if DEBUG;break) if x < 0 && x < target[:x].min
+        (puts".x.y.s3 #{[x_velocity,y_velocity,step,x,y]}" if DEBUG;break) if x == 0 && !(target[:x].min..target[:x].max).include?(x)
+        (puts".x.y.s4 #{[x_velocity,y_velocity,step,x,y]}" if DEBUG;break) if y < target[:y].min
+        (puts".x.y.s5 #{[x_velocity,y_velocity,step,x,y]}" if DEBUG;next) unless (target[:x].min..target[:x].max).include?(x)
+        (puts".x.y.s6 #{[x_velocity,y_velocity,step,x,y]}" if DEBUG;next) unless (target[:y].min..target[:y].max).include?(y)
+        solutions << [x_velocity, y_velocity, step]
+      end
     end
   end
 end
