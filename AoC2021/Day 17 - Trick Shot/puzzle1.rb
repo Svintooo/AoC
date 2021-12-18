@@ -20,19 +20,35 @@ p target #DEBUG
 
 
 ## HELP CODE
-def pos_x(t, v)
-  negate = v < 0
-  v = -v if negate
+class Position
+  def initialize(initial_velosity, type)
+    @initial_velosity = initial_velosity
+    @velosity = initial_velosity
 
-  x = (t <= v) ? ( v*t - (t**2)/2 - t/2 ) \
-               : ( (v**2)/2 - v/2 )
+    @type = type
+  end
 
-  x = -x if negate
-  return x
-end
+  def position(t)
+    case type
+      when :x then pos_x(t)
+      when :y then pos_y(t)
+    end
+  end
 
-def pos_y(t, v)
-  v*t - (t**2)/2 - t/2
+  def pos_x(t, v)
+    negate = v < 0
+    v = -v if negate
+
+    x = (t <= v) ? ( v*t - (t**2)/2 - t/2 ) \
+                 : ( (v**2)/2 - v/2 )
+
+    x = -x if negate
+    return x
+  end
+
+  def pos_y(t, v)
+    v*t - (t**2)/2 - t/2
+  end
 end
 
 
