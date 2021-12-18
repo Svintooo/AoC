@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-
+require "json"
 
 ## INPUT
 data = case when File.exists?(ARGV[0])
@@ -9,10 +9,17 @@ data = case when File.exists?(ARGV[0])
 
 
 ## PARSING
-asdf = data.lines.map(&:strip)
+numbers = data.lines.map(&:strip)
+              .map{|line| JSON.parse(line) }
+#pp numbers
 
 
 ## HELP CODE
+def explode(number)
+end
+
+def split(number)
+end
 
 
 ## CHECK
