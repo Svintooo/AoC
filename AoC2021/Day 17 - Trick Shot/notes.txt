@@ -8,12 +8,12 @@ example target: x=20..30, y=-10..-5
 
 ## x ##
 accelrtn: x'' = -1
-velocity: x'  = -t + B    if t <= B
-              = 0         if t >= B
-position: x   = -½t² + Bt if t <= B
-              = ½B²       if t >= B
+velocity: x'  = -t + V    if t <= V
+              = 0         if t >= V
+position: x   = -½t² + Vt if t <= V
+              = ½V²       if t >= V
 t: time (step)
-B: start velocity
+V: start velocity
 NOTE: position (x) does not include `+ C`
       since start position it at 0.
 #######
@@ -21,15 +21,16 @@ NOTE: position (x) does not include `+ C`
 
 ## y ##
 accelrtn: y'' = -1
-velocity: y'  = -t + P
-position: y   = -½t² + Bt
+velocity: y'  = -t + A
+position: y   = -½t² + At
 t: time (step)
-P: start velocity
+A: start velocity
 NOTE: position (y) does not include `+ C`
       since start position it at 0.
 #######
 
 
-## start velocity (x) ##
-
+## start velocity V (for x) ##
+    targets: T = [20..30]
+possible Vs: Vs = T +
 ########################
