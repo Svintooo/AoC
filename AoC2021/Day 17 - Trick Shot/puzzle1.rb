@@ -35,6 +35,7 @@ class Position
       when :y then pos_y(t)
     end
   end
+  alias :pos :position
 
   def pos_x(t)
     v = @initial_velosity
