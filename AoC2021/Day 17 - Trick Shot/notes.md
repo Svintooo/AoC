@@ -52,7 +52,7 @@ Then position x can be calculated like this:
 ```
 x = V + (V-1) + (V-2) + ... + (V-(t-1))
   = V +  V-1  +  V-2  + ... +  V-(t-1)
-  = V*t - 1 - 2 - ... - (t-1)
+  = V*t -  1 - 2 - ... - (t-1)
   = V*t - (1 + 2 + ... + (t-1))
   = V*t - (t(t-1))/2
   = V*t - (t²-t)/2
