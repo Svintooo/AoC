@@ -71,7 +71,8 @@ x_enumerator.each do |x_velocity|
     (puts".x.y3";break) if x < 0 && x <= target[:x].min
     (puts".x.y4";next) if x == 0 && !(target[:x].min..target[:x].max).include?(x)
     #print"." #DEBUG
-    start_step = step_where_y_is_zero(y_velocity)
+    start_step = step_where_y_is_zero(y_velocity) + 1
+    break if y_pos(start_step, y_velocity) < target[:y].min
     (start_step..).each do |step|
       x = x_pos(step, x_velocity)
       y = y_pos(step, y_velocity)
