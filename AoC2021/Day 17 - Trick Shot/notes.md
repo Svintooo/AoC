@@ -46,8 +46,8 @@ possible Ats: Ats = all [A,t] where t in Vts and A=1..t and y(t)=-10..-5
 
 
 ## Proofs
-If the acceleration is -1,initial velocity is V, and each step t is a
-positive ingeter, and we are only changing velocity after each step t.
+If the acceleration is -1, initial velocity is V, and each step t is a positive ingeter,
+and the acceleration is only changing the velocity at each step t.
 Then position x can be calculated like this:
 ```
 x = V + (V-1) + (V-2) + ... + (V-(t-1))
