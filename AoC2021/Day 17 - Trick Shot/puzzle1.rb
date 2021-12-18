@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+DEBUG = false
 
 
 ## INPUT
@@ -17,7 +18,7 @@ target = data.gsub("target area: ","")
                                 .sort
              }
              .yield_self{|d| [:x,:y].zip(d).to_h }
-p target; puts #DEBUG
+(p target; puts) if DEBUG
 
 
 ## HELP CODE
@@ -47,8 +48,6 @@ end
 
 ## CALCULATE
 solutions = []
-
-DEBUG = true
 
 x_enumerator = if target[:x].all?{|x| x >= 0}
                  0..target[:x].max
@@ -95,10 +94,11 @@ x_enumerator.each do |x_velocity|
 end
 puts if DEBUG
 
-#DEBUG
-pp solutions
-#p [x_pos(4,9), y_pos(4,0)]
-puts
+if DEBUG
+  pp solutions
+  #p [x_pos(4,9), y_pos(4,0)]
+  puts
+end
 
 
 ## ANSWER
