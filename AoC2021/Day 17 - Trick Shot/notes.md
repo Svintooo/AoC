@@ -14,12 +14,8 @@ velocity: x'  = V - t     if t <= V
               = 0         if t >= V
 position: x   = Vt - ½t²  if t <= V         # This would've been correct
               = ½V²       if t >= V         # if we weren't stepping.
-position: x   = V+(V-1)+(V-2)+...+(V-(t-1))  if t < V
-              = V+ V-1 + V-2 +...+ V-(t-1)
-              = Vt -1-2-...-(t-1)
-              = Vt - (t(t-1))/2             # This is the correct formula for the
-              = Vt - t²/2 - t/2  if t <= V  # simulation we do in this puzzle.
-              = V²/2 - V/2       if t >= V
+position: x   = Vt - t²/2 - t/2  if t <= V  # This is the correct formula for the
+              = V²/2 - V/2       if t >= V  # simulation we do in this puzzle.
 t: time (step)
 V: start velocity
 ```
@@ -46,4 +42,19 @@ possible Vts: Vts = all [V,t] where t=V..1 and V=30..1 and x(t)=30..20
 
 possible Ats: Ats = all [A,t] where t in Vts and A=1..t and y(t)=-10..-5
                   = all [A,t] where t in Vts and A=1..t and y(t)=(Ty.last)..(Ty.first)
+```
+
+
+## Proofs
+If the acceleration is -1,initial velocity is V, and each step t is a
+positive ingeter, and we are only changing velocity after each step t.
+Then position x can be calculated like this:
+```
+x = V + (V-1) + (V-2) + ... + (V-(t-1))
+  = V +  V-1  +  V-2  + ... +  V-(t-1)
+  = V*t - 1 - 2 - ... - (t-1)
+  = V*t - (1 + 2 + ... + (t-1))
+  = V*t - (t(t-1))/2
+  = V*t - (t²-t)/2
+  = V*t - t²/2 - t/2
 ```
