@@ -37,6 +37,10 @@ def y_pos(step, velo)
   velo*step - (step**2 - step)/2
 end
 
+def step_where_y_is_zero(velo)
+  2*velo + 1
+end
+
 
 ## CHECK
 
@@ -67,9 +71,8 @@ x_enumerator.each do |x_velocity|
     (puts".x.y3";break) if x < 0 && x <= target[:x].min
     (puts".x.y4";next) if x == 0 && !(target[:x].min..target[:x].max).include?(x)
     #print"." #DEBUG
-    #y = y_pos(1, y_velocity)
-    #break if y < target[:y].min
-    (1..).each do |step|
+    start_step = step_where_y_is_zero(y_velocity)
+    (start_step..).each do |step|
       x = x_pos(step, x_velocity)
       y = y_pos(step, y_velocity)
       (puts".x.y.s1 #{[x_velocity,y_velocity,step,x,y]}";break) if x > 0 && x > target[:x].max
