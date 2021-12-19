@@ -57,7 +57,7 @@ numbers_list.each do |snailfish_number|
   loop do
     result = integer_refs.each_with_index do |index, i|
       underlying_array_index = index[0..-2]
-      partner_index = underlying_array_index + [index.last.+(1) % 2]
+      partner_index = underlying_array_index + [(index.last + 1) % 2]
 
       underlying_array = number.dig(*underlying_array_index)
       integer = number.dig(*index)
@@ -66,7 +66,6 @@ numbers_list.each do |snailfish_number|
       if index.length > 4+1 && partner.kind_of?(Integer)
         ## Explode
         integer_refs.delete_at(i+1)
-        #p([underlying_array_index,underlying_array])#DEBUG
         number.dig(*integer_refs[i-1][0..-2])[integer_refs[i-1][-1]] += underlying_array[0] if i != 0
         number.dig(*integer_refs[i+1][0..-2])[integer_refs[i+1][-1]] += underlying_array[1] if i != integer_refs.length-1
         number.dig(*underlying_array_index[0..-2])[underlying_array_index[-1]] = 0
@@ -79,7 +78,7 @@ numbers_list.each do |snailfish_number|
 
     result = integer_refs.each_with_index do |index, i|
       underlying_array_index = index[0..-2]
-      partner_index = underlying_array_index + [index.last.+(1) % 2]
+      partner_index = underlying_array_index + [(index.last + 1) % 2]
 
       underlying_array = number.dig(*underlying_array_index)
       integer = number.dig(*index)
