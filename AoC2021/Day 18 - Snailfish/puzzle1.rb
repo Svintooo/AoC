@@ -19,13 +19,15 @@ numbers_list = data.lines.map(&:strip)
 
 
 ## CALCULATE
-numbers_list.each do |the_actual_numbers|
-  puts;p(the_actual_numbers) #DEBUG
+final_numbers = []
+
+numbers_list.each do |snailfish_number|
+  puts;p(snailfish_number) #DEBUG
 
   #NOTE: In this code, each variable named `index` is actually an array of integers.
 
   # The numbers needs to be put in an extra array for the code to work
-  numbers = [the_actual_numbers]
+  numbers = [snailfish_number]
 
   ## Find all index combinations for each integer
   integer_refs = []
@@ -65,7 +67,7 @@ numbers_list.each do |the_actual_numbers|
         numbers.dig(*integer_refs[i+1][0..-2])[integer_refs[i+1][-1]] += underlying_array[1] if i != integer_refs.length-1
         numbers.dig(*underlying_array_index[0..-2])[underlying_array_index[-1]] = 0
         integer_refs[i] = index[0..-2]
-        print"X:";p(the_actual_numbers) #DEBUG
+        print"X:";p(snailfish_number) #DEBUG
         break :CONTINUE
       elsif integer > 9
         ## Split
@@ -74,7 +76,7 @@ numbers_list.each do |the_actual_numbers|
         numbers.dig(*index[0..-2])[index[-1]] = [new_integer_1, new_integer_2]
         integer_refs[i] = index+[0]
         integer_refs.insert(i+1, index+[1])
-        print"S:";p(the_actual_numbers) #DEBUG
+        print"S:";p(snailfish_number) #DEBUG
         break :CONTINUE
       end
     end
@@ -82,7 +84,7 @@ numbers_list.each do |the_actual_numbers|
     break unless result == :CONTINUE
   end
 
-  p(the_actual_numbers) #DEBUG
+  p(snailfish_number) #DEBUG
 end
 
 
