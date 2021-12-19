@@ -96,9 +96,28 @@ numbers_list.each do |snailfish_number|
   #STDIN.gets("\n") #DEBUG
 end
 
-puts"#{final_number.inspect.gsub(' ','')}" #DEBUG
+#puts"#{final_number.inspect.gsub(' ','')}" #DEBUG
+
+# Calculate the magnitude of the final snail number
+magnitudes = [[final_number]]  # needs to be put in two extra arrays for the loop to work
+queue = [ [0,0] ]  # Initialize queue
+while index = queue.first do
+  object = magnitudes.dig(*index)
+  break if object.kind_of? Integer
+
+  array = object
+  if array.any?{|o| o.kind_of? Array }
+    queue.unshift index+[1] if array[1].kind_of? Array
+    queue.unshift index+[0] if array[0].kind_of? Array
+  else #if array.all?{|o| o.kind_of? Integer }
+    queue.shift
+    magnitude = array[0]*3 + array[1]*2
+    underlying_array = magnitudes.dig(*index[0..-2])
+    underlying_array[index[-1]] = magnitude
+  end
+end
 
 
 ## ANSWER
-answer = nil
+answer = magnitudes.flatten.first
 puts answer
