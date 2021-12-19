@@ -18,14 +18,6 @@ numbers_list = data.lines.map(&:strip)
 #pp numbers_list
 
 
-## HELP CODE
-def explode(number)
-end
-
-def split(number)
-end
-
-
 ## CALCULATE
 numbers_list.each do |the_actual_numbers|
   puts;p(the_actual_numbers) #DEBUG
