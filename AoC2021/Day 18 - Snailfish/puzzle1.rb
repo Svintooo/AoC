@@ -19,15 +19,19 @@ numbers_list = data.lines.map(&:strip)
 
 
 ## CALCULATE
-final_numbers = []
+final_number = []
+
+#NOTE: In this code, each variable named `index` is actually an array of integers.
 
 numbers_list.each do |snailfish_number|
-  puts;p(snailfish_number) #DEBUG
+  puts;print"+";puts"#{snailfish_number.inspect.gsub(' ','')}" #DEBUG
 
-  #NOTE: In this code, each variable named `index` is actually an array of integers.
+  ## Add new snailfish number
+  final_number = final_number.empty? ? snailfish_number : [final_number,snailfish_number]
+  puts"#{final_number.inspect.gsub(' ','')}" #DEBUG
 
-  # The numbers needs to be put in an extra array for the code to work
-  numbers = [snailfish_number]
+  ## The snailfish number needs to be put in an extra array for the loops to work
+  number = [final_number]
 
   ## Find all index combinations for each integer
   integer_refs = []
@@ -35,7 +39,7 @@ numbers_list.each do |snailfish_number|
 
   while index = queue.shift do
     #p index #DEBUG
-    case object = numbers.dig(*index)
+    case object = number.dig(*index)
       when Array
         queue.unshift index+[1]
         queue.unshift index+[0]
@@ -55,28 +59,28 @@ numbers_list.each do |snailfish_number|
       underlying_array_index = index[0..-2]
       partner_index = underlying_array_index + [index.last.+(1) % 2]
 
-      underlying_array = numbers.dig(*underlying_array_index)
-      integer = numbers.dig(*index)
-      partner = numbers.dig(*partner_index)
+      underlying_array = number.dig(*underlying_array_index)
+      integer = number.dig(*index)
+      partner = number.dig(*partner_index)
 
       if index.length > 4+1 && partner.kind_of?(Integer)
         ## Explode
         integer_refs.delete_at(i+1)
         #p([underlying_array_index,underlying_array])#DEBUG
-        numbers.dig(*integer_refs[i-1][0..-2])[integer_refs[i-1][-1]] += underlying_array[0] if i != 0
-        numbers.dig(*integer_refs[i+1][0..-2])[integer_refs[i+1][-1]] += underlying_array[1] if i != integer_refs.length-1
-        numbers.dig(*underlying_array_index[0..-2])[underlying_array_index[-1]] = 0
+        number.dig(*integer_refs[i-1][0..-2])[integer_refs[i-1][-1]] += underlying_array[0] if i != 0
+        number.dig(*integer_refs[i+1][0..-2])[integer_refs[i+1][-1]] += underlying_array[1] if i != integer_refs.length-1
+        number.dig(*underlying_array_index[0..-2])[underlying_array_index[-1]] = 0
         integer_refs[i] = index[0..-2]
-        print"X:";p(snailfish_number) #DEBUG
+        print"X:";puts"#{final_number.inspect.gsub(' ','')}" #DEBUG
         break :CONTINUE
       elsif integer > 9
         ## Split
         new_integer_1 = (integer / 2).floor
         new_integer_2 = integer - new_integer_1
-        numbers.dig(*index[0..-2])[index[-1]] = [new_integer_1, new_integer_2]
+        number.dig(*index[0..-2])[index[-1]] = [new_integer_1, new_integer_2]
         integer_refs[i] = index+[0]
         integer_refs.insert(i+1, index+[1])
-        print"S:";p(snailfish_number) #DEBUG
+        print"S:";puts"#{final_number.inspect.gsub(' ','')}" #DEBUG
         break :CONTINUE
       end
     end
@@ -84,7 +88,8 @@ numbers_list.each do |snailfish_number|
     break unless result == :CONTINUE
   end
 
-  p(snailfish_number) #DEBUG
+  puts"#{final_number.inspect.gsub(' ','')}" #DEBUG
+  #STDIN.gets("\n") #DEBUG
 end
 
 
