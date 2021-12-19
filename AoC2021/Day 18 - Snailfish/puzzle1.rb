@@ -65,13 +65,16 @@ numbers_list.each do |the_actual_numbers|
         numbers.dig(*integer_refs[i+1][0..-2])[integer_refs[i+1][-1]] += underlying_array[1] if i != integer_refs.length-1
         numbers.dig(*underlying_array_index[0..-2])[underlying_array_index[-1]] = 0
         integer_refs[i] = index[0..-2]
+        print"X:";p(the_actual_numbers) #DEBUG
         break :CONTINUE
       elsif integer > 9
         ## Split
-        new_integer_1 = (integer / 5).floor
-        new_integer_2 = integer - left_integer
+        new_integer_1 = (integer / 2).floor
+        new_integer_2 = integer - new_integer_1
         numbers.dig(*index[0..-2])[index[-1]] = [new_integer_1, new_integer_2]
-        #
+        integer_refs[i] = index+[0]
+        integer_refs.insert(i+1, index+[1])
+        print"S:";p(the_actual_numbers) #DEBUG
         break :CONTINUE
       end
     end
