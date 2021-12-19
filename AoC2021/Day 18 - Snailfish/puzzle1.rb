@@ -57,10 +57,13 @@ numbers_list.each do |numbers|
       underlying_array_index = index[0..-2]
       partner_index = underlying_array_index + [index.last.+(1) % 2]
 
-      if index.length > 4 && numbers.dig(*partner_index).kind_of?(Integer)
+      integer = numbers.dig(*index)
+      partner = numbers.dig(*partner_index)
+
+      if index.length > 4 && partner.kind_of?(Integer)
         #explode
         break :CONTINUE
-      elsif (integer = numbers.dig(*index)) > 9
+      elsif integer > 9
         #split
         break :CONTINUE
       end
