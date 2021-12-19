@@ -30,30 +30,39 @@ end
 numbers_list.each do |numbers|
   puts;p(numbers) #DEBUG
 
+  #NOTE: In this code, each variable named `index` is actually an array of integers.
+
   ## Find all index combinations for each integer
-  integer_indexes = []
+  integer_refs = []
   queue = [ [0], [1] ]
 
-  while indexes = queue.shift do
-    #p indexes #DEBUG
-    case o = numbers.dig(*indexes)
+  while index = queue.shift do
+    #p index #DEBUG
+    case object = numbers.dig(*index)
       when Array
-        queue.unshift indexes+[1]
-        queue.unshift indexes+[0]
+        queue.unshift index+[1]
+        queue.unshift index+[0]
       when Integer
-        integer_indexes << indexes
+        integer_refs << index
       else
-        $stderr.puts "WARN: Unknown data `#{o.inspect}`"
+        $stderr.puts "WARN: Unknown data `#{object.inspect}`"
       #end
     end
   end
-  #p integer_indexes #DEBUG
+  #p integer_refs #DEBUG
 
   ## Reduce snailfish number
   loop do
     result =
-      integer_indexes.each_with_index do |indexes, i|
-        #
+      integer_refs.each_with_index do |index, i|
+        underlying_array_index = index[0..-2]
+        partner_index = underlying_array_index + [index.last.+(1) % 2]
+
+        if index.length > 4 && numbers.dig(*partner_index).kind_of?(Integer)
+          #explode
+        elsif (integer = numbers.dig(*index)) > 9
+          #split
+        end
       end
 
     break unless result == :continue
