@@ -52,8 +52,8 @@ numbers_list.each do |numbers|
   ## Reduce snailfish number
   loop do
     result =
-      loop do
-        break #DEBUG
+      integer_indexes.each_with_index do |indexes, i|
+        #
       end
 
     break unless result == :continue
