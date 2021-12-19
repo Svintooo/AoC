@@ -28,8 +28,12 @@ end
 
 ## CALCULATE
 numbers_list.each do |numbers|
+  puts;p(numbers) #DEBUG
+
+  ## Find all index combinations for each integer
   integer_indexes = []
   queue = [ [0], [1] ]
+
   while indexes = queue.shift do
     #p indexes #DEBUG
     case o = numbers.dig(*indexes)
@@ -43,11 +47,13 @@ numbers_list.each do |numbers|
       #end
     end
   end
+  #p integer_indexes #DEBUG
 
+  ## Reduce snailfish number
   loop do
     result =
       loop do
-        #
+        break #DEBUG
       end
 
     break unless result == :continue
