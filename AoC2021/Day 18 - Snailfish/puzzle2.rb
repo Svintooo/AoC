@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require "json"
 
+
 ## INPUT
 EXPLODE_DEPTH   = 4
 SPLIT_MIN_VALUE = 10
@@ -18,9 +19,9 @@ raise "Invalid input data" unless data.match? /\A[\[\],0-9\s]+\z/
 numbers_list = data.lines.map(&:strip)
                    .map{|line| JSON.parse(line) }
 #pp numbers_list #DEBUG
-puts numbers_list[0].inspect.gsub(/\s/,'') #DEBUG
-puts numbers_list[1].inspect.gsub(/\s/,'') #DEBUG
-puts #DEBUG
+#puts numbers_list[0].inspect.gsub(/\s/,'') #DEBUG
+#puts numbers_list[1].inspect.gsub(/\s/,'') #DEBUG
+#puts #DEBUG
 #exit #DEBUG
 
 
@@ -31,9 +32,9 @@ magnitudes_list = []
 
 # Add all snailfish numbers together
 numbers_list.permutation(2) do |snailfish_number_1, snailfish_number_2|
-  puts snailfish_number_1.inspect.gsub(/\s/,'') #DEBUG
-  puts snailfish_number_2.inspect.gsub(/\s/,'') #DEBUG
-  puts #DEBUG
+  #puts snailfish_number_1.inspect.gsub(/\s/,'') #DEBUG
+  #puts snailfish_number_2.inspect.gsub(/\s/,'') #DEBUG
+  #puts #DEBUG
   #exit #DEBUG
   #puts;print"+";puts"#{snailfish_number.inspect.gsub(' ','')}" #DEBUG
   [[snailfish_number_1,snailfish_number_2],[snailfish_number_2,snailfish_number_1]].each do |final_number|
@@ -41,11 +42,13 @@ numbers_list.permutation(2) do |snailfish_number_1, snailfish_number_2|
     number = [final_number]
     xxx = final_number.inspect.gsub(/\s/,'') #DEBUG
 
-    puts final_number[0].inspect.gsub(/\s/,'') #DEBUG
-    puts final_number[1].inspect.gsub(/\s/,'') #DEBUG
-    puts #DEBUG
-    puts xxx
-    #exit #DEBUG
+    #puts final_number[0].inspect.gsub(/\s/,'') #DEBUG
+    #puts final_number[1].inspect.gsub(/\s/,'') #DEBUG
+    #puts #DEBUG
+    #puts xxx #DEBUG
+    ##exit #DEBUG
+    snailfish_number_1_ = snailfish_number_1.inspect.gsub(/\s/,'')
+    snailfish_number_2_ = snailfish_number_2.inspect.gsub(/\s/,'')
 
     ## Find all index combinations for each integer
     integer_refs = []
@@ -102,13 +105,13 @@ numbers_list.permutation(2) do |snailfish_number_1, snailfish_number_2|
 
       break
     end
-    puts final_number.inspect.gsub(/\s/,'')
-    exit
-    if xxx == final_number.inspect.gsub(/\s/,'') #DEBUG
-      puts snailfish_number_1.inspect.gsub(/\s/,'')
-      puts snailfish_number_2.inspect.gsub(/\s/,'')
-      exit
-    end
+    #puts final_number.inspect.gsub(/\s/,'') #DEBUG
+    #exit #DEBUG
+    #if xxx == final_number.inspect.gsub(/\s/,'') #DEBUG
+    #  puts snailfish_number_1.inspect.gsub(/\s/,'') #DEBUG
+    #  puts snailfish_number_2.inspect.gsub(/\s/,'') #DEBUG
+    #  exit #DEBUG
+    #end #DEBUG
 
     ## Magnitude
     magnitudes = [[final_number]]  # needs to be put in two extra arrays for the loop to work
@@ -136,14 +139,14 @@ numbers_list.permutation(2) do |snailfish_number_1, snailfish_number_2|
     final_magnitude = magnitudes.flatten.first
 
     ##
-    magnitudes_list << [final_magnitude, final_number, snailfish_number_1, snailfish_number_2]
+    magnitudes_list << [final_magnitude, final_number.inspect.gsub(/\s/,''), snailfish_number_1_, snailfish_number_2_]
 
     #puts"#{final_number.inspect.gsub(' ','')}" #DEBUG
     #STDIN.gets("\n") #DEBUG
   end
 end
 
-magnitudes_list.sort_by{|o| o[0] }.each{|o| p o.map{|n| n.inspect.gsub(/\s/,'') }}
+magnitudes_list.sort_by{|o| o[0] }.each{|o| p o }
 #pp magnitudes_list.sort_by{|o| o[0] }.last[0]
 
 
