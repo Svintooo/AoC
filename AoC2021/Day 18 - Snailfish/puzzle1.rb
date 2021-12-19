@@ -27,14 +27,17 @@ end
 
 
 ## CALCULATE
-numbers_list.each do |numbers|
-  puts;p(numbers) #DEBUG
+numbers_list.each do |the_actual_numbers|
+  puts;p(the_actual_numbers) #DEBUG
 
   #NOTE: In this code, each variable named `index` is actually an array of integers.
 
+  # The numbers needs to be put in an extra array for the code to work
+  numbers = [the_actual_numbers]
+
   ## Find all index combinations for each integer
   integer_refs = []
-  queue = [ [0], [1] ]
+  queue = [ [0] ]
 
   while index = queue.shift do
     #p index #DEBUG
@@ -50,6 +53,7 @@ numbers_list.each do |numbers|
     end
   end
   #p integer_refs #DEBUG
+  #next #DEBUG
 
   ## Reduce snailfish number
   loop do
@@ -57,20 +61,29 @@ numbers_list.each do |numbers|
       underlying_array_index = index[0..-2]
       partner_index = underlying_array_index + [index.last.+(1) % 2]
 
+      underlying_array = numbers.dig(*underlying_array_index)
       integer = numbers.dig(*index)
       partner = numbers.dig(*partner_index)
 
-      if index.length > 4 && partner.kind_of?(Integer)
-        #explode
+      if index.length > 4+1 && partner.kind_of?(Integer)
+        ## explode
+        integer_refs.delete_at(i+1)
+        #p([underlying_array_index,underlying_array])#DEBUG
+        numbers.dig(*integer_refs[i-1][0..-2])[integer_refs[i-1][-1]] += underlying_array[0] if i != 0
+        numbers.dig(*integer_refs[i+1][0..-2])[integer_refs[i+1][-1]] += underlying_array[1] if i != integer_refs.length-1
+        numbers.dig(*underlying_array_index[0..-2])[underlying_array_index[-1]] = 0
+        integer_refs[i] = index[0..-2]
         break :CONTINUE
       elsif integer > 9
-        #split
-        break :CONTINUE
+        ## split
+        #break :CONTINUE
       end
     end
 
     break unless result == :CONTINUE
   end
+
+  p(the_actual_numbers) #DEBUG
 end
 
 
