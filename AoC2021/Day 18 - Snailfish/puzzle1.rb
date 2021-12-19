@@ -10,6 +10,20 @@ data = case when File.exists?(ARGV[0])
             end
 
 
+## PARSING
+numbers_list = data.lines.map(&:strip)
+                   .map{|line| JSON.parse(line) }
+#pp numbers_list
+
+
+## HELP CODE
+def explode(number)
+end
+
+def split(number)
+end
+
+
 ## CHECK
 raise "Invalid input data" unless data.match? /\A[\[\],0-9\s]+\z/
 
