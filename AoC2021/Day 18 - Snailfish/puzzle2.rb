@@ -102,6 +102,9 @@ end
 magnitudes = [[final_number]]  # needs to be put in two extra arrays for the loop to work
 queue = [ [0,0] ]  # Initialize queue
 while index = queue.first do
+  #puts
+  #p queue
+  #p magnitudes
   object = magnitudes.dig(*index)
   break if object.kind_of? Integer
 
@@ -109,6 +112,8 @@ while index = queue.first do
   if array.any?{|o| o.kind_of? Array }
     queue.unshift index+[1] if array[1].kind_of? Array
     queue.unshift index+[0] if array[0].kind_of? Array
+    underlying_array = magnitudes.dig(*index[0..-2])
+    underlying_array[index[-1]] = array.clone  # Do not modify final_number
   else #if array.all?{|o| o.kind_of? Integer }
     queue.shift
     magnitude = array[0]*3 + array[1]*2
@@ -116,6 +121,7 @@ while index = queue.first do
     underlying_array[index[-1]] = magnitude
   end
 end
+#puts"#{final_number.inspect.gsub(' ','')}" #DEBUG
 
 
 ## ANSWER
