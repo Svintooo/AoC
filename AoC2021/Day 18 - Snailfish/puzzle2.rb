@@ -18,11 +18,6 @@ raise "Invalid input data" unless data.match? /\A[\[\],0-9\s]+\z/
 ## PARSING
 numbers_list = data.lines.map(&:strip)
                    .map{|line| JSON.parse(line) }
-#pp numbers_list #DEBUG
-#puts numbers_list[0].inspect.gsub(/\s/,'') #DEBUG
-#puts numbers_list[1].inspect.gsub(/\s/,'') #DEBUG
-#puts #DEBUG
-#exit #DEBUG
 
 
 ## CALCULATE
@@ -34,21 +29,12 @@ magnitudes_list = []
 numbers_list.permutation(2) do |snailfish_number_1, snailfish_number_2|
   snailfish_number_1 = JSON.parse(snailfish_number_1.to_json)
   snailfish_number_2 = JSON.parse(snailfish_number_2.to_json)
-  #puts snailfish_number_1.inspect.gsub(/\s/,'') #DEBUG
-  #puts snailfish_number_2.inspect.gsub(/\s/,'') #DEBUG
-  #puts #DEBUG
-  #exit #DEBUG
-  #puts;print"+";puts"#{snailfish_number.inspect.gsub(' ','')}" #DEBUG
+
   [[snailfish_number_1,snailfish_number_2],[snailfish_number_2,snailfish_number_1]].each do |final_number|
     ## The snailfish number needs to be put in an extra array for the loops to work
     number = [final_number]
     xxx = final_number.inspect.gsub(/\s/,'') #DEBUG
 
-    #puts final_number[0].inspect.gsub(/\s/,'') #DEBUG
-    #puts final_number[1].inspect.gsub(/\s/,'') #DEBUG
-    #puts #DEBUG
-    #puts xxx #DEBUG
-    ##exit #DEBUG
     snailfish_number_1_ = snailfish_number_1.inspect.gsub(/\s/,'')
     snailfish_number_2_ = snailfish_number_2.inspect.gsub(/\s/,'')
 
@@ -57,7 +43,6 @@ numbers_list.permutation(2) do |snailfish_number_1, snailfish_number_2|
     queue = [ [0] ]  # Initialize queue
 
     while index = queue.shift do
-      #p index #DEBUG
       case object = number.dig(*index)
         when Array
           queue.unshift index+[1]
@@ -69,8 +54,6 @@ numbers_list.permutation(2) do |snailfish_number_1, snailfish_number_2|
         #end
       end
     end
-    #p integer_refs #DEBUG
-    #next #DEBUG
 
     ## Reduce snailfish number
     loop do
@@ -107,21 +90,11 @@ numbers_list.permutation(2) do |snailfish_number_1, snailfish_number_2|
 
       break
     end
-    #puts final_number.inspect.gsub(/\s/,'') #DEBUG
-    #exit #DEBUG
-    #if xxx == final_number.inspect.gsub(/\s/,'') #DEBUG
-    #  puts snailfish_number_1.inspect.gsub(/\s/,'') #DEBUG
-    #  puts snailfish_number_2.inspect.gsub(/\s/,'') #DEBUG
-    #  exit #DEBUG
-    #end #DEBUG
 
     ## Magnitude
     magnitudes = [[final_number]]  # needs to be put in two extra arrays for the loop to work
     queue = [ [0,0] ]  # Initialize queue
     while index = queue.first do
-      #puts
-      #p queue
-      #p magnitudes
       object = magnitudes.dig(*index)
       break if object.kind_of? Integer
 
@@ -148,7 +121,7 @@ numbers_list.permutation(2) do |snailfish_number_1, snailfish_number_2|
   end
 end
 
-magnitudes_list.sort_by{|o| o[0] }.each{|o| p o }
+#magnitudes_list.sort_by{|o| o[0] }.each{|o| p o }
 #pp magnitudes_list.sort_by{|o| o[0] }.last[0]
 
 
