@@ -2,6 +2,8 @@
 require "json"
 
 ## INPUT
+EXPLODE_DEPTH   = 4
+SPLIT_MIN_VALUE = 10
 data = case when File.exists?(ARGV[0])
             then ARGF.read
             else ARGV[0]
@@ -57,7 +59,7 @@ numbers_list.each do |snailfish_number|
   loop do
     ## Explode loop
     result = integer_refs.each_with_index do |index, i|
-      next if not index.length > 4+1  # +1 since we put final_number inside number
+      next if not index.length > EXPLODE_DEPTH+1  # +1 since we put final_number inside number
       underlying_array = number.dig(*index[0..-2])
       next if not underlying_array.all?{|o| o.kind_of? Integer }
 
@@ -74,7 +76,7 @@ numbers_list.each do |snailfish_number|
     ## Split loop
     result = integer_refs.each_with_index do |index, i|
       integer = number.dig(*index)
-      next if not integer > 9
+      next if integer < SPLIT_MIN_VALUE
 
       new_integer_1 = (integer / 2).floor
       new_integer_2 = integer - new_integer_1
