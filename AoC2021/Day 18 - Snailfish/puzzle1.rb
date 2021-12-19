@@ -27,7 +27,20 @@ end
 
 ## CALCULATE
 numbers_list.each do |numbers|
-  #
+  integer_indexes = []
+  queue = [ [0], [1] ]
+  while index = queue.unshift do
+    #
+  end
+
+  loop do
+    result =
+      loop do
+        #
+      end
+
+    break unless result == :continue
+  end
 end
 
 
