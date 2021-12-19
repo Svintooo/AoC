@@ -53,19 +53,20 @@ numbers_list.each do |numbers|
 
   ## Reduce snailfish number
   loop do
-    result =
-      integer_refs.each_with_index do |index, i|
-        underlying_array_index = index[0..-2]
-        partner_index = underlying_array_index + [index.last.+(1) % 2]
+    result = integer_refs.each_with_index do |index, i|
+      underlying_array_index = index[0..-2]
+      partner_index = underlying_array_index + [index.last.+(1) % 2]
 
-        if index.length > 4 && numbers.dig(*partner_index).kind_of?(Integer)
-          #explode
-        elsif (integer = numbers.dig(*index)) > 9
-          #split
-        end
+      if index.length > 4 && numbers.dig(*partner_index).kind_of?(Integer)
+        #explode
+        break :CONTINUE
+      elsif (integer = numbers.dig(*index)) > 9
+        #split
+        break :CONTINUE
       end
+    end
 
-    break unless result == :continue
+    break unless result == :CONTINUE
   end
 end
 
