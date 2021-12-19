@@ -71,21 +71,34 @@ numbers_list.each do |snailfish_number|
         number.dig(*integer_refs[i+1][0..-2])[integer_refs[i+1][-1]] += underlying_array[1] if i != integer_refs.length-1
         number.dig(*underlying_array_index[0..-2])[underlying_array_index[-1]] = 0
         integer_refs[i] = index[0..-2]
-        print"X:";puts"#{final_number.inspect.gsub(' ','')}" #DEBUG
-        break :CONTINUE
-      elsif integer > 9
+        #print"X:";puts"#{final_number.inspect.gsub(' ','')}" #DEBUG
+        break :RESTART_LOOP
+      end
+    end
+    next if result == :RESTART_LOOP
+
+    result = integer_refs.each_with_index do |index, i|
+      underlying_array_index = index[0..-2]
+      partner_index = underlying_array_index + [index.last.+(1) % 2]
+
+      underlying_array = number.dig(*underlying_array_index)
+      integer = number.dig(*index)
+      partner = number.dig(*partner_index)
+
+      if integer > 9
         ## Split
         new_integer_1 = (integer / 2).floor
         new_integer_2 = integer - new_integer_1
         number.dig(*index[0..-2])[index[-1]] = [new_integer_1, new_integer_2]
         integer_refs[i] = index+[0]
         integer_refs.insert(i+1, index+[1])
-        print"S:";puts"#{final_number.inspect.gsub(' ','')}" #DEBUG
-        break :CONTINUE
+        #print"S:";puts"#{final_number.inspect.gsub(' ','')}" #DEBUG
+        break :RESTART_LOOP
       end
     end
+    next if result == :RESTART_LOOP
 
-    break unless result == :CONTINUE
+    break
   end
 
   puts"#{final_number.inspect.gsub(' ','')}" #DEBUG
