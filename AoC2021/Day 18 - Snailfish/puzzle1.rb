@@ -29,8 +29,13 @@ end
 numbers_list.each do |numbers|
   integer_indexes = []
   queue = [ [0], [1] ]
-  while index = queue.unshift do
-    #
+  while indexes = queue.unshift do
+    case numbers.dig(*indexes)
+      when Array
+      when Integer
+      else
+      #end
+    end
   end
 
   loop do
