@@ -25,6 +25,7 @@ final_number = []
 
 #NOTE: In this code, each variable named `index` is actually an array of integers.
 
+# Add all snailfish numbers together
 numbers_list.each do |snailfish_number|
   #puts;print"+";puts"#{snailfish_number.inspect.gsub(' ','')}" #DEBUG
 
@@ -37,7 +38,7 @@ numbers_list.each do |snailfish_number|
 
   ## Find all index combinations for each integer
   integer_refs = []
-  queue = [ [0] ]
+  queue = [ [0] ]  # Initialize queue
 
   while index = queue.shift do
     #p index #DEBUG
