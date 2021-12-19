@@ -58,7 +58,7 @@ numbers_list.each do |the_actual_numbers|
       partner = numbers.dig(*partner_index)
 
       if index.length > 4+1 && partner.kind_of?(Integer)
-        ## explode
+        ## Explode
         integer_refs.delete_at(i+1)
         #p([underlying_array_index,underlying_array])#DEBUG
         numbers.dig(*integer_refs[i-1][0..-2])[integer_refs[i-1][-1]] += underlying_array[0] if i != 0
@@ -67,8 +67,12 @@ numbers_list.each do |the_actual_numbers|
         integer_refs[i] = index[0..-2]
         break :CONTINUE
       elsif integer > 9
-        ## split
-        #break :CONTINUE
+        ## Split
+        new_integer_1 = (integer / 5).floor
+        new_integer_2 = integer - left_integer
+        numbers.dig(*index[0..-2])[index[-1]] = [new_integer_1, new_integer_2]
+        #
+        break :CONTINUE
       end
     end
 
