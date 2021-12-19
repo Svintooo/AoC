@@ -32,6 +32,8 @@ magnitudes_list = []
 
 # Add all snailfish numbers together
 numbers_list.permutation(2) do |snailfish_number_1, snailfish_number_2|
+  snailfish_number_1 = JSON.parse(snailfish_number_1.to_json)
+  snailfish_number_2 = JSON.parse(snailfish_number_2.to_json)
   #puts snailfish_number_1.inspect.gsub(/\s/,'') #DEBUG
   #puts snailfish_number_2.inspect.gsub(/\s/,'') #DEBUG
   #puts #DEBUG
