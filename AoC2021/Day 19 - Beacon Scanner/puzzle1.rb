@@ -15,10 +15,8 @@ scanners = data.split(/#{NEWLINE}#{NEWLINE}/)
                  scanner.gsub(/\A--- scanner . ---/,'')
                         .strip
                         .split(NEWLINE)
-                        .map{|beacon|
-                          beacon.split(',')
-                                .map(&:to_i)
-                        }
+                        .map{|beacon| beacon.split(',').map(&:to_i) }
+                        .unshift([0,0,0])  # scanner coordinates
                }
 #pp scanners #DEBUG
 
@@ -40,6 +38,8 @@ end
 
 
 ## CALCULATE
+scanners_n_beacons = []
+scanners_n = 0
 
 
 ## ANSWER
