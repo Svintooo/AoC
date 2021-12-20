@@ -39,7 +39,12 @@ end
 
 ## CALCULATE
 scanners_n_beacons = []
-scanners_n = 0
+scanners_c = 0
+
+scanners_n_beacons << copy(scanners[0])
+scanners_c += 1
+#pp scanners_n_beacons #DEBUG
+#p scanners_c #DEBUG
 
 
 ## ANSWER
