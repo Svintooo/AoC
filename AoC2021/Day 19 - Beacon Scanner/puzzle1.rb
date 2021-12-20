@@ -205,7 +205,7 @@ while scanner_readings = queue.shift
       matching_beacon_count = count_matching_beacons(beacon_map, scanners_c, moved_readings)
 
       if matching_beacon_count >= MINIMUM_MATCHING_BEACONS
-        # Scanners are placed in the top of beacon_map
+        # Scanners are placed at the top of beacon_map
         scanner = moved_readings.shift
         beacon_map.insert(scanners_c, scanner)
         scanners_c += 1
