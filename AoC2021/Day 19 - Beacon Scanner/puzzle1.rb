@@ -39,17 +39,28 @@ end
 
 
 ## CALCULATE
-scanners_n_beacons = []
+beacon_map = []
 scanners_c = 0
 
-# initialize
-scanners_n_beacons << copy(scanners_readings[0])
+# Initialize Map
+beacon_map << copy(scanners_readings[0])
 scanners_c += 1
 #pp scanners_n_beacons #DEBUG
 #p scanners_c #DEBUG
 
-scanners_readings[1..-1].each do |scanner|
-  #
+# Loop queue
+queue = scanners_readings[1..-1]
+
+# Build map
+while scanner_readings = queue.shift
+  Rotations(scanner_readings).each do |rotated_readings|
+    BeaconPairs(beacon_map, scanners_c, rotated_readings).each do |moved_readings|
+      #
+    end
+  end
+
+  # No match, put back into queue
+  queue << scanner_readings
 end
 
 
