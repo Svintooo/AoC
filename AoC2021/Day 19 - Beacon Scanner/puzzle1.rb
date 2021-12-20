@@ -163,7 +163,7 @@ class Movements
   end
 
   def move_readings_so_beacons_share_coordinates(beacon, new_beacon)
-    movement = beacon.zip(new_beacon).map{|a,b|a-b}
+    movement = beacon.zip(new_beacon).map{|a,b|a-b} # Code crash here: `-': nil can't be coerced into Integer (TypeError)
 
     @readings.each_with_index do |coordinate, i|
       @readings[i] = coordinate.zip(movement).map{|a,b|a+b}
