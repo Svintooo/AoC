@@ -45,10 +45,75 @@ def count_beacon_pairs(beacon_map, scanners_c, moved_readings)
   #
 end
 
+# Enumerator for all possible rotations of scanner_readings
 class Rotations
-  # Enumerator for all possible rotations of scanner_readings
-  #WARN: remember to copy
+  include Enumerable
+
+  def initialize(scanner_readings)
+    @scanner_readings = copy(scanner_readings)
+  end
+
+  def rotate_x
+    @scanner_readings.each do |beacon|
+      y, z = beacon[2], -beacon[1]
+      beacon[1], beacon[2] = y, z
+    end
+  end
+
+  def rotate_y
+    @scanner_readings.each do |beacon|
+      x, z = -beacon[2], beacon[0]
+      beacon[0], beacon[2] = x, z
+    end
+  end
+
+  def rotate_z
+    @scanner_readings.each do |beacon|
+      x, y = beacon[1], -beacon[0]
+      beacon[0], beacon[1] = x, y
+    end
+  end
+
+  def each
+    yield copy(@scanner_readings)
+
+    rotate_y(); yield copy(@scanner_readings)
+    rotate_y(); yield copy(@scanner_readings)
+    rotate_y(); yield copy(@scanner_readings)
+
+    rotate_x(); yield copy(@scanner_readings)
+
+    rotate_z(); yield copy(@scanner_readings)
+    rotate_z(); yield copy(@scanner_readings)
+    rotate_z(); yield copy(@scanner_readings)
+
+    rotate_y(); yield copy(@scanner_readings)
+
+    rotate_x(); yield copy(@scanner_readings)
+    rotate_x(); yield copy(@scanner_readings)
+    rotate_x(); yield copy(@scanner_readings)
+
+    rotate_z(); yield copy(@scanner_readings)
+
+    rotate_y(); yield copy(@scanner_readings)
+    rotate_y(); yield copy(@scanner_readings)
+    rotate_y(); yield copy(@scanner_readings)
+
+    rotate_x(); yield copy(@scanner_readings)
+
+    rotate_z(); yield copy(@scanner_readings)
+    rotate_z(); yield copy(@scanner_readings)
+    rotate_z(); yield copy(@scanner_readings)
+
+    rotate_y(); yield copy(@scanner_readings)
+
+    rotate_x(); yield copy(@scanner_readings)
+    rotate_x(); yield copy(@scanner_readings)
+    rotate_x(); yield copy(@scanner_readings)
+  end
 end
+#Rotations.new([[1,2,3],[4,5,6]]).each{|o| p o }#DEBUG
+#exit #DEBUG
 
 class MatchingBeaconPositions
   # Enumerator for all moved scanner_readings where two (2) beacons share positions
