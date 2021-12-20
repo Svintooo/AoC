@@ -165,7 +165,9 @@ class Movements
   end
 
   def move_readings(movement)
-    #
+    @readings.each_with_index do |coordinate, i|
+      @readings[i] = coordinate.zip(movement).map{|a,b|a+b}
+    end
   end
 
   def each
