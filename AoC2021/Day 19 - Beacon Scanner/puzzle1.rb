@@ -172,14 +172,21 @@ class Movements
 
   def each
     @beacons.each do |beacon|
-      readings[1..-1].each do |new_beacon|
+      @readings.each_index do |i|
+        next if i == 0  # Skip scanner
+        new_beacon = @readings[i]
         move_readings_so_beacons_share_coordinates(beacon, new_beacon)
         yield copy(@readings)
       end
     end
   end
 end
-exit #DEBUG
+#Movements.new([[0,0,0],[1,2,3]],           1,[[9,9,9],[1,2,3]]        ).each{|moved_readings| pp moved_readings };puts #DEBUG
+#Movements.new([[0,0,0],[1,2,3]],           1,[[9,9,9],[1,2,3],[2,3,4]]).each{|moved_readings| pp moved_readings };puts #DEBUG
+#Movements.new([[0,0,0],[1,2,3],[ 3, 4, 5]],1,[[9,9,9],[1,2,3],[2,3,4]]).each{|moved_readings| pp moved_readings };puts #DEBUG
+#Movements.new([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[2,3,4]]).each{|moved_readings| pp moved_readings };puts #DEBUG
+#Movements.new([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[1009,1009,1009]]).each{|moved_readings| pp moved_readings };puts #DEBUG
+#exit #DEBUG
 
 
 ## CALCULATE
