@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 NEWLINE = /(?:\r\n?|\n)/
 SCANNER_RANGE=1000
+MINIMUM_MATCHING_BEACONS = 12
 
 
 ## INPUT
@@ -72,12 +73,12 @@ end
 #p has_unmatching_beacons([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[-991,-991,-991]]) #DEBUG true
 #exit #DEBUG
 
-def count_beacon_pairs(beacon_map, scanners_c, moved_readings)
+def count_matching_beacons(beacon_map, scanners_c, moved_readings)
   (beacon_map[scanners_c..-1] & moved_readings[1..-1]).count
 end
-#p count_beacon_pairs([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[1009,1009,1009]]) #DEBUG 1
-#p count_beacon_pairs([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[-1,-2,-3]])       #DEBUG 2
-#p count_beacon_pairs([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[2,3,4],[1009,1009,1009]]) #DEBUG 0
+#p count_matching_beacons([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[1009,1009,1009]]) #DEBUG 1
+#p count_matching_beacons([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[-1,-2,-3]])       #DEBUG 2
+#p count_matching_beacons([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[2,3,4],[1009,1009,1009]]) #DEBUG 0
 #exit #DEBUG
 
 # Enumerator for all possible rotations for all xyz-coordinates in an array
@@ -177,9 +178,9 @@ while scanner_readings = queue.shift
     MatchingBeaconPositions(beacon_map, scanners_c, rotated_readings).each do |moved_readings|
       next if new_scanner_clashes_with_occupied_coordinate(beacon_map, moved_readings)
       next if has_unmatching_beacons(beacon_map, scanners_c, moved_readings)
-      beacon_pair_count = count_beacon_pairs(beacon_map, scanners_c, moved_readings)
+      matching_beacon_count = count_matching_beacons(beacon_map, scanners_c, moved_readings)
 
-      if beacon_pair_count >= 12
+      if matching_beacon_count >= MINIMUM_MATCHING_BEACONS
         # Scanners are placed in the top of beacon_map
         scanner = moved_readings.shift
         beacon_map.insert(scanners_c, scanner)
