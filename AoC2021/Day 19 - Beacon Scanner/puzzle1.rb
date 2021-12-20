@@ -10,15 +10,16 @@ data = ARGF.read
 
 
 ## PARSING
-scanners = data.split(/#{NEWLINE}#{NEWLINE}/)
-               .map{|scanner|
-                 scanner.gsub(/\A--- scanner . ---/,'')
-                        .strip
-                        .split(NEWLINE)
-                        .map{|beacon| beacon.split(',').map(&:to_i) }
-                        .unshift([0,0,0])  # scanner coordinates
-               }
-#pp scanners #DEBUG
+scanners_readings =
+  data.split(/#{NEWLINE}#{NEWLINE}/)
+      .map{|scanner|
+        scanner.gsub(/\A--- scanner . ---/,'')
+               .strip
+               .split(NEWLINE)
+               .map{|beacon| beacon.split(',').map(&:to_i) }
+               .unshift([0,0,0])  # scanner coordinates
+      }
+#pp scanners_readings #DEBUG
 
 
 ## HELP CODE
@@ -29,7 +30,7 @@ def copy(array)
     array[i] = ary.clone
   end
 end
-#a1 = scanners[0][0..4] #DEBUG
+#a1 = scanners_readings[0][0..4] #DEBUG
 #a2 = copy(a1) #DEBUG
 #a2[0][2] = "asdf" #DEBUG
 #a2[1] = "qwer" #DEBUG
@@ -41,10 +42,15 @@ end
 scanners_n_beacons = []
 scanners_c = 0
 
-scanners_n_beacons << copy(scanners[0])
+# initialize
+scanners_n_beacons << copy(scanners_readings[0])
 scanners_c += 1
 #pp scanners_n_beacons #DEBUG
 #p scanners_c #DEBUG
+
+scanners_readings[1..-1].each do |scanner|
+  #
+end
 
 
 ## ANSWER
