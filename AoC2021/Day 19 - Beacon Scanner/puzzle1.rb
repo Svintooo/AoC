@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 NEWLINE = /(?:\r\n?|\n)/
-BEACON_RANGE=1000
+SCANNER_RANGE=1000
 
 
 ## INPUT
@@ -21,6 +21,7 @@ scanners_readings =
                .unshift([0,0,0])  # Add the scanner coordinates
       }
 #pp scanners_readings #DEBUG
+#exit #DEBUG
 
 
 ## HELP CODE
@@ -37,20 +38,47 @@ end
 #a2[1] = "qwer" #DEBUG
 #a2 << a2.delete_at(3)
 #pp(a1,a2) #DEBUG
+#exit #DEBUG
 
-def has_unmatching_beacons(beacon_map, scanners_c, moved_readings)
+# Check if the new scanner clashes with an already occupied coordinate
+def new_scanner_clashes_with_occupied_coordinate(beacon_map, readings)
+  new_scanner = readings[0]
+  return beacon_map.include?(new_scanner)
+end
+
+# Check if any reachable new beacon doesn't exist in beacon_map
+def has_unmatching_beacons(beacon_map, scanners_c, readings)
   scanners = beacon_map[0...scanners_c]
   beacons  = beacon_map[scanners_c..-1]
-  new_beacons = moved_readings[1..-1]
+  new_beacons = readings[1..-1]
 
-  scanners.each do |scanner|
-    #
-  end
+  new_reachable_beacons =
+    new_beacons.select do |beacon|
+      scanners.any? do |scanner|
+        beacon[0] <= scanner[0] + SCANNER_RANGE &&
+        beacon[0] >= scanner[0] - SCANNER_RANGE &&
+        beacon[1] <= scanner[1] + SCANNER_RANGE &&
+        beacon[1] >= scanner[1] - SCANNER_RANGE &&
+        beacon[2] <= scanner[2] + SCANNER_RANGE &&
+        beacon[2] >= scanner[2] - SCANNER_RANGE
+      end
+    end
+
+  return new_reachable_beacons.any?{|beacon| not beacons.include?(beacon) }
 end
+#p has_unmatching_beacons([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3]]) #DEBUG false
+#p has_unmatching_beacons([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[1009,1009,1009]]) #DEBUG false
+#p has_unmatching_beacons([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[1000,1000,1000]]) #DEBUG true
+#p has_unmatching_beacons([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[-991,-991,-991]]) #DEBUG true
+#exit #DEBUG
 
 def count_beacon_pairs(beacon_map, scanners_c, moved_readings)
   (beacon_map[scanners_c..-1] & moved_readings[1..-1]).count
 end
+#p count_beacon_pairs([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[1009,1009,1009]]) #DEBUG 1
+#p count_beacon_pairs([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[-1,-2,-3]])       #DEBUG 2
+#p count_beacon_pairs([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[2,3,4],[1009,1009,1009]]) #DEBUG 0
+#exit #DEBUG
 
 # Enumerator for all possible rotations for all xyz-coordinates in an array
 class Rotations
@@ -120,6 +148,7 @@ class Rotations
   end
 end
 #Rotations.new([[1,2,3],[4,5,6]]).each{|o| p o }#DEBUG
+#exit #DEBUG
 
 class MatchingBeaconPositions
   # Enumerator for all moved scanner_readings where two (2) beacons share positions
@@ -146,6 +175,7 @@ while scanner_readings = queue.shift
   #WARN: This can loop forewer if not all readings can be matched together
   Rotations(scanner_readings).each do |rotated_readings|
     MatchingBeaconPositions(beacon_map, scanners_c, rotated_readings).each do |moved_readings|
+      next if new_scanner_clashes_with_occupied_coordinate(beacon_map, moved_readings)
       next if has_unmatching_beacons(beacon_map, scanners_c, moved_readings)
       beacon_pair_count = count_beacon_pairs(beacon_map, scanners_c, moved_readings)
 
