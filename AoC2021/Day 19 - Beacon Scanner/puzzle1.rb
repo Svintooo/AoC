@@ -35,6 +35,7 @@ end
 #a2 = copy(a1) #DEBUG
 #a2[0][2] = "asdf" #DEBUG
 #a2[1] = "qwer" #DEBUG
+#a2 << a2.delete_at(3)
 #pp(a1,a2) #DEBUG
 
 
