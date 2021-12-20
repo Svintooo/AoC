@@ -164,7 +164,9 @@ class Movements
     @readings    = copy(scanner_readings)
   end
 
-  def move_readings(movement)
+  def move_readings_so_beacons_share_coordinates(beacon, new_beacon)
+    movement = beacon.zip(new_beacon).map{|a,b|a-b}
+
     @readings.each_with_index do |coordinate, i|
       @readings[i] = coordinate.zip(movement).map{|a,b|a+b}
     end
@@ -173,8 +175,7 @@ class Movements
   def each
     @beacons.each do |beacon|
       readings[1..-1].each do |new_beacon|
-        movement = beacon.zip(new_beacon).map{|a,b|a-b}
-        move_readings(movement)
+        move_readings_so_beacons_share_coordinates(beacon, new_beacon)
         yield copy(@readings)
       end
     end
