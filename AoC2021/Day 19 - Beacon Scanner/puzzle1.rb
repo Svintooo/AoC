@@ -42,7 +42,7 @@ end
 #exit #DEBUG
 
 # Check if the new scanner clashes with an already occupied coordinate
-def new_scanner_clashes_with_occupied_coordinate(beacon_map, readings)
+def new_scanner_clashes_with_an_occupied_coordinate(beacon_map, readings)
   new_scanner = readings[0]
   return beacon_map.include?(new_scanner)
 end
@@ -196,28 +196,32 @@ scanners_c += 1
 queue = scanners_readings[1..-1]
 
 # Build map
+#WARN: This can loop forewer if not all readings can be matched together
 while scanner_readings = queue.shift
-  #WARN: This can loop forewer if not all readings can be matched together
-  Rotations.new(scanner_readings).each do |rotated_readings|
-    Movements.new(beacon_map, scanners_c, rotated_readings).each do |moved_readings|
-      next if new_scanner_clashes_with_occupied_coordinate(beacon_map, moved_readings)
-      next if has_unmatching_beacons(beacon_map, scanners_c, moved_readings)
-      matching_beacon_count = count_matching_beacons(beacon_map, scanners_c, moved_readings)
+  catch :MATCH_FOUND do
+    Rotations.new(scanner_readings).each do |rotated_readings|
+      Movements.new(beacon_map, scanners_c, rotated_readings).each do |moved_readings|
+        next if new_scanner_clashes_with_an_occupied_coordinate(beacon_map, moved_readings)
+        next if has_unmatching_beacons(beacon_map, scanners_c, moved_readings)
+        matching_beacon_count = count_matching_beacons(beacon_map, scanners_c, moved_readings)
 
-      if matching_beacon_count >= MINIMUM_MATCHING_BEACONS
-        # Scanners are placed at the top of beacon_map
-        scanner = moved_readings.shift
-        beacon_map.insert(scanners_c, scanner)
-        scanners_c += 1
+        if matching_beacon_count >= MINIMUM_MATCHING_BEACONS
+          # Scanners are placed at the top of beacon_map
+          scanner = moved_readings.shift
+          beacon_map.insert(scanners_c, scanner)
+          scanners_c += 1
 
-        # Only add the beacons that is not already included in beacon_map
-        beacon_map |= moved_readings
+          # Only add the beacons that is not already included in beacon_map
+          beacon_map |= moved_readings
+
+          throw :MATCH_FOUND
+        end
       end
     end
-  end
 
-  # No match, put back into queue again
-  queue << scanner_readings
+    # No match found, put back into queue again
+    queue << scanner_readings
+  end
 end
 
 
