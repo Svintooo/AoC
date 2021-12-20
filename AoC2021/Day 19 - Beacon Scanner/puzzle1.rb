@@ -17,7 +17,7 @@ scanners_readings =
                .strip
                .split(NEWLINE)
                .map{|beacon| beacon.split(',').map(&:to_i) }
-               .unshift([0,0,0])  # scanner coordinates
+               .unshift([0,0,0])  # Add the scanner coordinates
       }
 #pp scanners_readings #DEBUG
 
@@ -46,9 +46,14 @@ def count_beacon_pairs(beacon_map, scanners_c, moved_readings)
 end
 
 class Rotations
+  # Enumerator for all possible rotations of scanner_readings
+  #WARN: remember to copy
 end
 
 class MatchingBeaconPositions
+  # Enumerator for all moved scanner_readings where two (2) beacons share positions
+  #WARN: The first coordinate in scanner_readings scanner position and should not be used
+  #WARN: remember to copy
 end
 
 
@@ -67,6 +72,7 @@ queue = scanners_readings[1..-1]
 
 # Build map
 while scanner_readings = queue.shift
+  #WARN: This can loop forewer if not all readings can be matched together
   Rotations(scanner_readings).each do |rotated_readings|
     MatchingBeaconPositions(beacon_map, scanners_c, rotated_readings).each do |moved_readings|
       next if has_unmatching_beacons(beacon_map, scanners_c, moved_readings)
@@ -84,7 +90,7 @@ while scanner_readings = queue.shift
     end
   end
 
-  # No match, put back into queue
+  # No match, put back into queue again
   queue << scanner_readings
 end
 
