@@ -1,18 +1,26 @@
 #!/usr/bin/env ruby
+NEWLINE = /(?:\r\n?|\n)/
 
 
 ## INPUT
-data = case when File.exists?(ARGV[0])
-            then ARGF.read
-            else ARGV[0]
-            end
+data = ARGF.read
 
 
 ## CHECK
 
 
 ## PARSING
-asdf = data.lines.map(&:strip)
+scanners = data.split(/#{NEWLINE}#{NEWLINE}/)
+               .map{|scanner|
+                 scanner.gsub(/\A--- scanner . ---/,'')
+                        .strip
+                        .split(NEWLINE)
+                        .map{|beacon|
+                          beacon.split(',')
+                                .map(&:to_i)
+                        }
+               }
+pp scanners
 
 
 ## CALCULATE
