@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 NEWLINE = /(?:\r\n?|\n)/
-SCANNER_RANGE=1000
+SCANNER_RANGE = 1000
 MINIMUM_MATCHING_BEACONS = 12
 
 
@@ -190,12 +190,10 @@ end
 
 
 ## CALCULATE
-beacon_map = []
-scanners_c = 0
 
 # Initialize Map
-beacon_map << copy(scanners_readings[0])
-scanners_c += 1
+beacon_map = copy(scanners_readings[0])
+scanners_c = 1
 #pp scanners_n_beacons #DEBUG
 #p scanners_c #DEBUG
 
