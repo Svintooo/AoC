@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 NEWLINE = /(?:\r\n?|\n)/
+BEACON_RANGE=1000
 
 
 ## INPUT
@@ -38,14 +39,20 @@ end
 #pp(a1,a2) #DEBUG
 
 def has_unmatching_beacons(beacon_map, scanners_c, moved_readings)
-  #
+  scanners = beacon_map[0...scanners_c]
+  beacons  = beacon_map[scanners_c..-1]
+  new_beacons = moved_readings[1..-1]
+
+  scanners.each do |scanner|
+    #
+  end
 end
 
 def count_beacon_pairs(beacon_map, scanners_c, moved_readings)
-  #
+  (beacon_map[scanners_c..-1] & moved_readings[1..-1]).count
 end
 
-# Enumerator for all possible rotations of scanner_readings
+# Enumerator for all possible rotations for all xyz-coordinates in an array
 class Rotations
   include Enumerable
 
@@ -113,7 +120,6 @@ class Rotations
   end
 end
 #Rotations.new([[1,2,3],[4,5,6]]).each{|o| p o }#DEBUG
-#exit #DEBUG
 
 class MatchingBeaconPositions
   # Enumerator for all moved scanner_readings where two (2) beacons share positions
