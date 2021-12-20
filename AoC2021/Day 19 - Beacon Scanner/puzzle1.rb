@@ -152,8 +152,6 @@ end
 #exit #DEBUG
 
 # Enumerator for all moved scanner_readings where two (2) beacons share positions
-#WARN: The first coordinate in scanner_readings is scanner position and should not be used
-#WARN: remember to copy
 class Movements
   include Enumerable
 
@@ -181,6 +179,7 @@ class Movements
     end
   end
 end
+exit #DEBUG
 
 
 ## CALCULATE
@@ -199,8 +198,8 @@ queue = scanners_readings[1..-1]
 # Build map
 while scanner_readings = queue.shift
   #WARN: This can loop forewer if not all readings can be matched together
-  Rotations(scanner_readings).each do |rotated_readings|
-    Movements(beacon_map, scanners_c rotated_readings).each do |moved_readings|
+  Rotations.new(scanner_readings).each do |rotated_readings|
+    Movements.new(beacon_map, scanners_c, rotated_readings).each do |moved_readings|
       next if new_scanner_clashes_with_occupied_coordinate(beacon_map, moved_readings)
       next if has_unmatching_beacons(beacon_map, scanners_c, moved_readings)
       matching_beacon_count = count_matching_beacons(beacon_map, scanners_c, moved_readings)
