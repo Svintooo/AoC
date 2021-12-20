@@ -37,6 +37,20 @@ end
 #a2 << a2.delete_at(3)
 #pp(a1,a2) #DEBUG
 
+def has_unmatching_beacons(beacon_map, scanners_c, moved_readings)
+  #
+end
+
+def count_beacon_pairs(beacon_map, scanners_c, moved_readings)
+  #
+end
+
+class Rotations
+end
+
+class MatchingBeaconPositions
+end
+
 
 ## CALCULATE
 beacon_map = []
@@ -54,8 +68,19 @@ queue = scanners_readings[1..-1]
 # Build map
 while scanner_readings = queue.shift
   Rotations(scanner_readings).each do |rotated_readings|
-    BeaconPairs(beacon_map, scanners_c, rotated_readings).each do |moved_readings|
-      #
+    MatchingBeaconPositions(beacon_map, scanners_c, rotated_readings).each do |moved_readings|
+      next if has_unmatching_beacons(beacon_map, scanners_c, moved_readings)
+      beacon_pair_count = count_beacon_pairs(beacon_map, scanners_c, moved_readings)
+
+      if beacon_pair_count >= 12
+        # Scanners are placed in the top of beacon_map
+        scanner = moved_readings.shift
+        beacon_map.insert(scanners_c, scanner)
+        scanners_c += 1
+
+        # Only add the beacons that is not already included in beacon_map
+        beacon_map |= moved_readings
+      end
     end
   end
 
@@ -65,5 +90,5 @@ end
 
 
 ## ANSWER
-answer = nil
+answer = beacon_map[scanners_c..-1].count
 puts answer
