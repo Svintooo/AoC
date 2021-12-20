@@ -20,7 +20,22 @@ scanners = data.split(/#{NEWLINE}#{NEWLINE}/)
                                 .map(&:to_i)
                         }
                }
-pp scanners
+#pp scanners #DEBUG
+
+
+## HELP CODE
+def copy(array)
+  array = array.clone
+
+  array.each_with_index do |ary, i|
+    array[i] = ary.clone
+  end
+end
+#a1 = scanners[0][0..4] #DEBUG
+#a2 = copy(a1) #DEBUG
+#a2[0][2] = "asdf" #DEBUG
+#a2[1] = "qwer" #DEBUG
+#pp(a1,a2) #DEBUG
 
 
 ## CALCULATE
