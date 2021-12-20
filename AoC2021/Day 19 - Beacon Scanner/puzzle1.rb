@@ -151,10 +151,32 @@ end
 #Rotations.new([[1,2,3],[4,5,6]]).each{|o| p o }#DEBUG
 #exit #DEBUG
 
-class MatchingBeaconPositions
-  # Enumerator for all moved scanner_readings where two (2) beacons share positions
-  #WARN: The first coordinate in scanner_readings scanner position and should not be used
-  #WARN: remember to copy
+# Enumerator for all moved scanner_readings where two (2) beacons share positions
+#WARN: The first coordinate in scanner_readings is scanner position and should not be used
+#WARN: remember to copy
+class Movements
+  include Enumerable
+
+  def initialize(beacon_map, scanners_c, scanner_readings)
+    #@scanners    = beacon_map[0...scanners_c]
+    #@new_scanner = scanner_readings[0]
+    @beacons     = beacon_map[scanners_c..-1]
+    @readings    = copy(scanner_readings)
+  end
+
+  def move_readings(movement)
+    #
+  end
+
+  def each
+    @beacons.each do |beacon|
+      readings[1..-1].each do |new_beacon|
+        movement = beacon.zip(new_beacon).map{|a,b|a-b}
+        move_readings(movement)
+        yield copy(@readings)
+      end
+    end
+  end
 end
 
 
@@ -175,7 +197,7 @@ queue = scanners_readings[1..-1]
 while scanner_readings = queue.shift
   #WARN: This can loop forewer if not all readings can be matched together
   Rotations(scanner_readings).each do |rotated_readings|
-    MatchingBeaconPositions(beacon_map, scanners_c, rotated_readings).each do |moved_readings|
+    Movements(beacon_map, scanners_c rotated_readings).each do |moved_readings|
       next if new_scanner_clashes_with_occupied_coordinate(beacon_map, moved_readings)
       next if has_unmatching_beacons(beacon_map, scanners_c, moved_readings)
       matching_beacon_count = count_matching_beacons(beacon_map, scanners_c, moved_readings)
