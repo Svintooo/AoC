@@ -159,37 +159,9 @@ class Movements
   include Enumerable
 
   def initialize(beacons, readings)
-    @beacons  = copy(beacons)
-    @readings = copy(readings)
-    @w_beacons     = weight_beacons(copy(@beacons))
-    @w_new_beacons = weight_beacons(copy(@readings[1..-1]))  # Excluding scanner coordinate at top of list
-  end
-
-  def weight_beacons(beacons)
-    w_beacons = beacons.map{|beacon| [beacon,[]] }
-    imax = w_beacons.length-1
-
-    w_beacons = sort(w_beacons, [ 1, 1, 1])
-    w_beacons.each_with_index{|(_,weight),i| weight << [(i>MINIMUM_MATCHING_BEACONS-1), (imax-i>MINIMUM_MATCHING_BEACONS-1)] }
-
-    w_beacons = sort(w_beacons, [-1, 1, 1])
-    w_beacons.each_with_index{|(_,weight),i| weight << [(i>MINIMUM_MATCHING_BEACONS-1), (imax-i>MINIMUM_MATCHING_BEACONS-1)] }
-
-    w_beacons = sort(w_beacons, [ 1,-1, 1])
-    w_beacons.each_with_index{|(_,weight),i| weight << [(i>MINIMUM_MATCHING_BEACONS-1), (imax-i>MINIMUM_MATCHING_BEACONS-1)] }
-
-    w_beacons = sort(w_beacons, [ 1, 1,-1])
-    w_beacons.each_with_index{|(_,weight),i| weight << [(i>MINIMUM_MATCHING_BEACONS-1), (imax-i>MINIMUM_MATCHING_BEACONS-1)] }
-
-    return w_beacons
-  end
-
-  def sort(w_beacons, transform)
-    raise "transform" unless transform.all?{|n| n == 1 || n == -1 }
-    return w_beacons.sort_by{|beacon,_|
-             beacon = beacon.zip(transform).map{|a,b|a*b}
-             [beacon.sum, beacon]
-           }
+    @beacons  = beacons#copy(beacons)
+    @readings = readings#copy(readings)
+    @new_beacons = @readings[1..-1]  # Excluding scanner coordinate at top of list
   end
 
   def move_readings_so_beacons_share_coordinates(beacon, new_beacon, readings)
@@ -203,8 +175,8 @@ class Movements
   end
 
   def each
-    @w_beacons.each do |beacon,weight|
-      @w_new_beacons.each do |new_beacon,weight2|
+    @beacons.each do |beacon|
+      @new_beacons.each do |new_beacon|
         yield move_readings_so_beacons_share_coordinates(beacon, new_beacon, copy(@readings))
       end
     end
@@ -213,8 +185,8 @@ end
 #Movements.new([[1,2,3]]           ,[[9,9,9],[1,2,3]]        ).each{|moved_readings| pp moved_readings };puts #DEBUG
 #Movements.new([[1,2,3]]           ,[[9,9,9],[1,2,3],[4,5,6]]).each{|moved_readings| pp moved_readings };puts #DEBUG
 #Movements.new([[1,2,3],[ 3, 4, 5]],[[9,9,9],[1,2,3],[4,5,6]]).each{|moved_readings| pp moved_readings };puts #DEBUG
-#Movements.new([[1,2,3],[-1,-2,-3]],[[9,9,9],[1,2,3],[4,5,6]]).each{|moved_readings| pp moved_readings };puts #DEBUG
-#Movements.new([[1,2,3],[-1,-2,-3]],[[9,9,9],[1,2,3],[1009,1009,1009]]).each{|moved_readings| pp moved_readings };puts #DEBUG
+#Movements.new([[1,2,3],[-3,-2,-1]],[[9,9,9],[1,2,3],[4,5,6]]).each{|moved_readings| pp moved_readings };puts #DEBUG
+#Movements.new([[1,2,3],[-3,-2,-1]],[[9,9,9],[1,2,3],[1009,1009,1009]]).each{|moved_readings| pp moved_readings };puts #DEBUG
 #exit #DEBUG EXIT
 
 
