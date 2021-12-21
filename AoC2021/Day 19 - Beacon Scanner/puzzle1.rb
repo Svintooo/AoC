@@ -16,7 +16,7 @@ scanners_readings =
                .strip
                .split(NEWLINE)
                .map{|beacon| beacon.split(',').map(&:to_i) }
-               .unshift([0,0,0])  # Add the scanner coordinates
+               .unshift([0,0,0])  # Scanner coordinate added to top of each list
       }
 #pp scanners_readings #DEBUG
 #exit #DEBUG EXIT
@@ -53,10 +53,8 @@ def new_scanner_clashes_with_an_occupied_coordinate(beacon_map, readings)
 end
 
 # Check if any reachable new beacon doesn't exist in beacon_map
-def has_unmatching_beacons(beacon_map, scanners_c, readings)
-  scanners = beacon_map[0...scanners_c]
-  beacons  = beacon_map[scanners_c..-1]
-  new_beacons = readings[1..-1]
+def has_unmatching_beacons(scanners, beacons, readings)
+  new_beacons = readings[1..-1]  # Excluding scanner coordinate at top of list
 
   new_reachable_beacons =
     new_beacons.select do |beacon|
@@ -78,8 +76,8 @@ end
 #p has_unmatching_beacons([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[-991,-991,-991]]) #DEBUG true
 #exit #DEBUG EXIT
 
-def count_matching_beacons(beacon_map, scanners_c, moved_readings)
-  (beacon_map[scanners_c..-1] & moved_readings[1..-1]).count
+def count_matching_beacons(beacons, readings)
+  (beacons & readings[1..-1]).count  # Excluding scanner coordinate at top of list
 end
 #p count_matching_beacons([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[1009,1009,1009]]) #DEBUG 1
 #p count_matching_beacons([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[-1,-2,-3]])       #DEBUG 2
@@ -160,11 +158,9 @@ end
 class Movements
   include Enumerable
 
-  def initialize(beacon_map, scanners_c, scanner_readings)
-    #@scanners    = beacon_map[0...scanners_c]
-    #@new_scanner = scanner_readings[0]
-    @beacons     = beacon_map[scanners_c..-1]
-    @readings    = copy(scanner_readings)
+  def initialize(beacons, readings)
+    @beacons  = beacons
+    @readings = copy(readings)
   end
 
   def move_readings_so_beacons_share_coordinates(beacon, new_beacon)
@@ -198,9 +194,9 @@ end
 
 # Initialize Map
 beacon_map = copy(scanners_readings[0])
-scanners_c = 1
-#pp scanners_n_beacons #DEBUG
-#p scanners_c #DEBUG
+scanners   = [ beacon_map.shift ]  # Remove scanner coordinate from beacon_map
+#pp beacon_map #DEBUG
+#pp scanners #DEBUG
 
 # Loop queue
 queue = scanners_readings[1..-1]
@@ -210,19 +206,17 @@ queue = scanners_readings[1..-1]
 while scanner_readings = queue.shift
   catch :MATCH_FOUND do
     Rotations.new(scanner_readings).each do |rotated_readings|
-      Movements.new(beacon_map, scanners_c, rotated_readings).each do |moved_readings|
-        next if new_scanner_clashes_with_an_occupied_coordinate(beacon_map, moved_readings)
-        next if has_unmatching_beacons(beacon_map, scanners_c, moved_readings)
-        matching_beacon_count = count_matching_beacons(beacon_map, scanners_c, moved_readings)
+      Movements.new(beacon_map, rotated_readings).each do |moved_readings|
+        next if new_scanner_clashes_with_an_occupied_coordinate(beacon_map+scanners, moved_readings)
+        next if has_unmatching_beacons(scanners, beacon_map, moved_readings)
+        matching_beacon_count = count_matching_beacons(beacon_map, moved_readings)
 
         if matching_beacon_count >= MINIMUM_MATCHING_BEACONS
-          # Scanners are placed at the top of beacon_map
-          scanner = moved_readings.shift
-          beacon_map.insert(scanners_c, scanner)
-          scanners_c += 1
+          # Add new scanner coordinates
+          scanners << moved_readings.shift  # Scanner removed from moved_readings
 
-          # Only add the beacons that is not already included in beacon_map
-          beacon_map |= moved_readings
+          # Add all new beacons that is not already included in beacon_map
+          beacon_map |= moved_readings  # Same as: array1 = array1 | array2
 
           throw :MATCH_FOUND
         end
@@ -236,5 +230,5 @@ end
 
 
 ## ANSWER
-answer = beacon_map[scanners_c..-1].count
+answer = beacon_map.count
 puts answer
