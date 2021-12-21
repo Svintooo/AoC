@@ -161,8 +161,8 @@ class Movements
   def initialize(beacons, readings)
     @beacons  = copy(beacons)
     @readings = copy(readings)
-    @w_beacons     = weight_beacons(@beacons)
-    @w_new_beacons = weight_beacons(@readings[1..-1])  # Excluding scanner coordinate at top of list
+    @w_beacons     = weight_beacons(copy(@beacons))
+    @w_new_beacons = weight_beacons(copy(@readings[1..-1]))  # Excluding scanner coordinate at top of list
   end
 
   def weight_beacons(beacons)
@@ -201,10 +201,8 @@ class Movements
   end
 
   def each
-    @beacons.each do |beacon|
-      @readings.each_index do |i|
-        next if i == 0  # Skip scanner
-        new_beacon = @readings[i]
+    @w_beacons.each do |beacon|
+      @w_new_beacons.each do |new_beacon|
         move_readings_so_beacons_share_coordinates(beacon, new_beacon)
         yield copy(@readings)
       end
