@@ -201,8 +201,8 @@ class Movements
   end
 
   def each
-    @w_beacons.each do |beacon|
-      @w_new_beacons.each do |new_beacon|
+    @w_beacons.each do |beacon,weight|
+      @w_new_beacons.each do |new_beacon,weight2|
         move_readings_so_beacons_share_coordinates(beacon, new_beacon)
         yield copy(@readings)
       end
