@@ -187,33 +187,34 @@ class Movements
   def sort(w_beacons, transform)
     raise "transform" unless transform.all?{|n| n == 1 || n == -1 }
     return w_beacons.sort_by{|beacon,_|
-             beacon = beacon.zip(transform).map(&:*)
+             beacon = beacon.zip(transform).map{|a,b|a*b}
              [beacon.sum, beacon]
            }
   end
 
-  def move_readings_so_beacons_share_coordinates(beacon, new_beacon)
+  def move_readings_so_beacons_share_coordinates(beacon, new_beacon, readings)
     movement = beacon.zip(new_beacon).map{|a,b|a-b}
 
-    @readings.each_with_index do |coordinate, i|
-      @readings[i] = coordinate.zip(movement).map{|a,b|a+b}
+    readings.each_with_index do |coordinate, i|
+      readings[i] = coordinate.zip(movement).map{|a,b|a+b}
     end
+
+    return readings
   end
 
   def each
     @w_beacons.each do |beacon,weight|
       @w_new_beacons.each do |new_beacon,weight2|
-        move_readings_so_beacons_share_coordinates(beacon, new_beacon)
-        yield copy(@readings)
+        yield move_readings_so_beacons_share_coordinates(beacon, new_beacon, copy(@readings))
       end
     end
   end
 end
-#Movements.new([[0,0,0],[1,2,3]],           1,[[9,9,9],[1,2,3]]        ).each{|moved_readings| pp moved_readings };puts #DEBUG
-#Movements.new([[0,0,0],[1,2,3]],           1,[[9,9,9],[1,2,3],[2,3,4]]).each{|moved_readings| pp moved_readings };puts #DEBUG
-#Movements.new([[0,0,0],[1,2,3],[ 3, 4, 5]],1,[[9,9,9],[1,2,3],[2,3,4]]).each{|moved_readings| pp moved_readings };puts #DEBUG
-#Movements.new([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[2,3,4]]).each{|moved_readings| pp moved_readings };puts #DEBUG
-#Movements.new([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[1009,1009,1009]]).each{|moved_readings| pp moved_readings };puts #DEBUG
+#Movements.new([[1,2,3]]           ,[[9,9,9],[1,2,3]]        ).each{|moved_readings| pp moved_readings };puts #DEBUG
+#Movements.new([[1,2,3]]           ,[[9,9,9],[1,2,3],[4,5,6]]).each{|moved_readings| pp moved_readings };puts #DEBUG
+#Movements.new([[1,2,3],[ 3, 4, 5]],[[9,9,9],[1,2,3],[4,5,6]]).each{|moved_readings| pp moved_readings };puts #DEBUG
+#Movements.new([[1,2,3],[-1,-2,-3]],[[9,9,9],[1,2,3],[4,5,6]]).each{|moved_readings| pp moved_readings };puts #DEBUG
+#Movements.new([[1,2,3],[-1,-2,-3]],[[9,9,9],[1,2,3],[1009,1009,1009]]).each{|moved_readings| pp moved_readings };puts #DEBUG
 #exit #DEBUG EXIT
 
 
