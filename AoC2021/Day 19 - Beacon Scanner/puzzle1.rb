@@ -8,21 +8,26 @@ MINIMUM_MATCHING_BEACONS = 12
 data = ARGF.read
 
 
-## CHECK
-
-
 ## PARSING
 scanners_readings =
   data.split(/#{NEWLINE}#{NEWLINE}/)
       .map{|scanner|
-        scanner.gsub(/\A--- scanner . ---/,'')
+        scanner.gsub(/\A--- scanner [0-9]+ ---/,'')
                .strip
                .split(NEWLINE)
                .map{|beacon| beacon.split(',').map(&:to_i) }
                .unshift([0,0,0])  # Add the scanner coordinates
       }
 #pp scanners_readings #DEBUG
-#exit #DEBUG
+#exit #DEBUG EXIT
+
+
+## CHECK
+if not scanners_readings.all?{|scanner_readings| scanner_readings.all?{|coordinates| coordinates.count == 3 && coordinates.all?{|num| num.kind_of? Integer } } }
+  #pp scanners_readings.reject{|scanner_readings| scanner_readings.all?{|coordinates| coordinates.count == 3 && coordinates.all?{|num| num.kind_of? Integer } } }
+  raise "Input error"
+end
+#exit #DEBUG EXIT
 
 
 ## HELP CODE
@@ -39,7 +44,7 @@ end
 #a2[1] = "qwer" #DEBUG
 #a2 << a2.delete_at(3)
 #pp(a1,a2) #DEBUG
-#exit #DEBUG
+#exit #DEBUG EXIT
 
 # Check if the new scanner clashes with an already occupied coordinate
 def new_scanner_clashes_with_an_occupied_coordinate(beacon_map, readings)
@@ -71,7 +76,7 @@ end
 #p has_unmatching_beacons([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[1009,1009,1009]]) #DEBUG false
 #p has_unmatching_beacons([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[1000,1000,1000]]) #DEBUG true
 #p has_unmatching_beacons([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[-991,-991,-991]]) #DEBUG true
-#exit #DEBUG
+#exit #DEBUG EXIT
 
 def count_matching_beacons(beacon_map, scanners_c, moved_readings)
   (beacon_map[scanners_c..-1] & moved_readings[1..-1]).count
@@ -79,7 +84,7 @@ end
 #p count_matching_beacons([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[1009,1009,1009]]) #DEBUG 1
 #p count_matching_beacons([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[-1,-2,-3]])       #DEBUG 2
 #p count_matching_beacons([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[2,3,4],[1009,1009,1009]]) #DEBUG 0
-#exit #DEBUG
+#exit #DEBUG EXIT
 
 # Enumerator for all possible rotations for all xyz-coordinates in an array
 class Rotations
@@ -149,7 +154,7 @@ class Rotations
   end
 end
 #Rotations.new([[1,2,3],[4,5,6]]).each{|o| p o }#DEBUG
-#exit #DEBUG
+#exit #DEBUG EXIT
 
 # Enumerator for all moved scanner_readings where two (2) beacons share positions
 class Movements
@@ -163,7 +168,7 @@ class Movements
   end
 
   def move_readings_so_beacons_share_coordinates(beacon, new_beacon)
-    movement = beacon.zip(new_beacon).map{|a,b|a-b} # Code crash here: `-': nil can't be coerced into Integer (TypeError)
+    movement = beacon.zip(new_beacon).map{|a,b|a-b}
 
     @readings.each_with_index do |coordinate, i|
       @readings[i] = coordinate.zip(movement).map{|a,b|a+b}
@@ -186,7 +191,7 @@ end
 #Movements.new([[0,0,0],[1,2,3],[ 3, 4, 5]],1,[[9,9,9],[1,2,3],[2,3,4]]).each{|moved_readings| pp moved_readings };puts #DEBUG
 #Movements.new([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[2,3,4]]).each{|moved_readings| pp moved_readings };puts #DEBUG
 #Movements.new([[0,0,0],[1,2,3],[-1,-2,-3]],1,[[9,9,9],[1,2,3],[1009,1009,1009]]).each{|moved_readings| pp moved_readings };puts #DEBUG
-#exit #DEBUG
+#exit #DEBUG EXIT
 
 
 ## CALCULATE
