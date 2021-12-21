@@ -159,8 +159,37 @@ class Movements
   include Enumerable
 
   def initialize(beacons, readings)
-    @beacons  = beacons
+    @beacons  = copy(beacons)
     @readings = copy(readings)
+    @w_beacons     = weight_beacons(@beacons)
+    @w_new_beacons = weight_beacons(@readings[1..-1])  # Excluding scanner coordinate at top of list
+  end
+
+  def weight_beacons(beacons)
+    w_beacons = beacons.map{|beacon| [beacon,[]] }
+    imax = w_beacons.length-1
+
+    w_beacons = sort(w_beacons, [ 1, 1, 1])
+    w_beacons.each_with_index{|(_,weight),i| weight << [(i>MINIMUM_MATCHING_BEACONS-1), (imax-i>MINIMUM_MATCHING_BEACONS-1)] }
+
+    w_beacons = sort(w_beacons, [-1, 1, 1])
+    w_beacons.each_with_index{|(_,weight),i| weight << [(i>MINIMUM_MATCHING_BEACONS-1), (imax-i>MINIMUM_MATCHING_BEACONS-1)] }
+
+    w_beacons = sort(w_beacons, [ 1,-1, 1])
+    w_beacons.each_with_index{|(_,weight),i| weight << [(i>MINIMUM_MATCHING_BEACONS-1), (imax-i>MINIMUM_MATCHING_BEACONS-1)] }
+
+    w_beacons = sort(w_beacons, [ 1, 1,-1])
+    w_beacons.each_with_index{|(_,weight),i| weight << [(i>MINIMUM_MATCHING_BEACONS-1), (imax-i>MINIMUM_MATCHING_BEACONS-1)] }
+
+    return w_beacons
+  end
+
+  def sort(w_beacons, transform)
+    raise "transform" unless transform.all?{|n| n == 1 || n == -1 }
+    return w_beacons.sort_by{|beacon,_|
+             beacon = beacon.zip(transform).map(&:*)
+             [beacon.sum, beacon]
+           }
   end
 
   def move_readings_so_beacons_share_coordinates(beacon, new_beacon)
