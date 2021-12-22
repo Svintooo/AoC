@@ -14,5 +14,5 @@ Since the image is infinite you can't just apply the algorithm on the image data
 
 In the example input data this was easy. The algorithm converted value 0 to an empty pixel. BUT for the real input the algorithm converted value 0 to a lit pixel (and value MAX to an empty pixel).
 
-It's hard to explain properly, and I'ma fraid I didn't manage to figure this out myself. I got my needed clue from this reddit reply:
+It's hard to explain properly, and I'm afraid I didn't manage to figure this out myself. I got my needed clue from this reddit reply:
 https://www.reddit.com/r/adventofcode/comments/rm43rr/2021_20_part1python_anyone_finds_the_mistake/hpjrz9o/
