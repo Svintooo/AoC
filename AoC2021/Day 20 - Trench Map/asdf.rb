@@ -1,45 +1,28 @@
-#!/usr/bin/env ruby
-NEWLINE = /(?:\r\n?|\n)/
+# image enhancement algorithm
+algorithm = "..#.#..#####.#.#.#.###.##.....###.##.#..###.####..#####..#....#..#..##..###..######.###...####..#..#####..##..#.#####...##.#.#..#.##..#.#......#.###.######.###.####...#.##.##..#..#..#####.....#.#....###..#.##......#.....#..#..#..##..#...##.######.####.####.#.#...#.......#..#.#.#...####.##.#......#..#...##.#.##..#...##.#.##..###.#......#.#.......#.#.#.####.###.##...#.....####.#..#..#.##.#....##..#.####....##...##..#...#......#.#.......#.......##..####..#...#.#.#...##..#.#..###..#####........#..####......#..#"
+algorithm = algorithm.chars
 
 
-## INPUT
-data = ARGF.read
-
-
-## PARSING
-algorithm, input_image = data.split(/#{NEWLINE}#{NEWLINE}/)
-#puts algorithm;puts #DEBUG
-#puts input_image;puts #DEBUG
-#exit #DEBUG EXIT
-
-algorithm = algorithm.strip.chars
-
+# input image
+input_image = "#..#." +"\n"+
+              "#...." +"\n"+
+              "##..#" +"\n"+
+              "..#.." +"\n"+
+              "..###"
 input_image = input_image.lines.map{|line| line.strip.chars }
-input_image.each{|line| puts line.join };puts #DEBUG
-#exit #DEBUG EXIT
+input_image.each{|line| puts line.join };puts#PRINT
 
 
-## CHECK
-#exit #DEBUG EXIT
-
-
-## HELP CODE
-#exit #DEBUG EXIT
-
-
-## CALCULATE
 output_image = input_image
 
-2.times do |step|
-  #puts"### #{step} ###"
-
+2.times do
   work_image = output_image.map{|line| ["."]+line+["."] }
   work_image.unshift Array.new(work_image[0].length, ".")
   work_image.push    Array.new(work_image[0].length, ".")
-  #work_image.each{|line| puts line.join };puts #DEBUG
+  #work_image.each{|line| puts line.join };puts#PRINT
 
   output_image = work_image.map{|line| Array.new(line.length, ".") }
-  #output_image.each{|line| puts line.join };puts #DEBUG
+  #work_image.each{|line| puts line.join };puts#PRINT
 
   m=work_image.length-1
   work_image.each_with_index do |line, i|
@@ -61,10 +44,9 @@ output_image = input_image
     end
   end
 
-  output_image.each{|line| puts line.join };puts #DEBUG
+  output_image.each{|line| puts line.join };puts#PRINT
 end
 
 
-## ANSWER
-answer = output_image.flatten.count("#")
-puts answer
+
+
