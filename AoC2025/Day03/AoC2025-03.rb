@@ -13,11 +13,17 @@ end
     fun = ->(batteries, battery_count_needed) {
       selected_batteries = []
       battery_count_needed.downto(1).each do |num|
-        battery, i = batteries[0..-num].each_with_index.max_by{|jolt,| jolt }
-        selected_batteries << battery
-        batteries = batteries[(i+1)..-1]
+        batteries[0..(-num)].each_with_index
+                            .max_by{|jolt, i| jolt }
+                            .tap{|jolt, i| selected_batteries << jolt }
+                            .tap{|jolt, i| batteries = batteries[(i+1)..-1] }
       end
       selected_batteries.join("").to_i
+      #[
+      #  02.downto(1).inject(["",0]){|(str, left), right| bank[left..(-right)].each_with_index.max_by{|jolt,i| jolt }.yield_self{|jolt,i| [str+jolt, left+=i+1] } }
+      #  ,
+      #  12.downto(1).inject(["",0]){|(str, left), right| bank[left..(-right)].each_with_index.max_by{|jolt,i| jolt }.yield_self{|jolt,i| [str+jolt, left+=i+1] } }
+      #]
     }
     [fun.call(bank,2), fun.call(bank,12)]
   }
