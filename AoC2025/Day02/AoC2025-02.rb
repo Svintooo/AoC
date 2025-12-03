@@ -1,5 +1,12 @@
 #!/usr/bin/env ruby
-IO.read("input")
+
+if !ARGV.empty?
+  IO.read(ARGV[0])
+elsif !STDIN.tty?
+  STDIN.read
+else
+  IO.read("input")  # Default
+end
   .gsub(/\r?\n|\r/,"")  # Handle all possible kinds of newlines
   .tap{|input| raise "Invalid input" unless input =~ /^(\d+-\d+)(,\d+-\d+)*$/ }
   .split(',')  # "abc,def" => ["abc", "def"]
