@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-if !ARGV.empty?
+input = if !ARGV.empty?
   IO.read(ARGV[0])
 elsif !STDIN.tty?
   STDIN.read
@@ -9,16 +9,26 @@ else
     .find{|file| File.readable?(file) }
     .yield_self{|file| IO.read(file) }
 end
-  .yield_self{|input| [input.chars, input[/^.*?(?:\r?\n|\r|$)/].length] }
-  .yield_self{|(grid,width)| grid.each_index.lazy.map{|index| [grid, width, index] } }
-  .select{|(grid,w,roll_index)| grid[roll_index] == '@' }
-  .inject(0){|acc,(grid,w,roll_index)|
-    [-w-1, -w, -w+1, -1, +1, +w-1, +w, +w+1]
-      .map{|dir| roll_index + dir }
-      .select{|index| index >= 0 && index < grid.count }
-      .map{|index| grid[index] }
-      .count('@')
-      #.tap{|o| puts "#{roll_index} #{o.inspect}" } #DEBUG
-      .yield_self{|count| acc + (count < 4 ? 1 : 0) }
-  }
-  .yield_self{|rolls_count| p rolls_count }
+
+asdf = 0
+qwer = -1
+
+while qwer != 0
+  qwer = input
+    .yield_self{|grid| [grid, grid[/^.*?(?:\r?\n|\r|$)/].length] }
+    .yield_self{|(grid,width)| grid.chars.each_index.lazy.map{|index| [grid, width, index] } }
+    .select{|(grid,w,roll_index)| grid[roll_index] == '@' }
+    .inject([0,[]]){|(acc,indexes),(grid,w,roll_index)|
+      [-w-1, -w, -w+1, -1, +1, +w-1, +w, +w+1]
+        .map{|dir| roll_index + dir }
+        .select{|index| index >= 0 && index < grid.length }
+        .map{|index| [index, grid[index]] }
+        .count{|(index,char)| char == '@' }
+        .yield_self{|count| (acc += 1; indexes << roll_index) if count < 4; [acc, indexes] }
+    }
+    .tap{|(count, indexes)| indexes.each{|i| input[i] = 'x' } }
+    .yield_self{|(count, indexes)| count }
+  asdf += qwer
+end
+
+p asdf
