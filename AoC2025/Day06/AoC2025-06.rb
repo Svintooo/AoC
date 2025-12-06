@@ -14,13 +14,12 @@ end
     .yield_self{|lines| lines.map(&:strip) }
     .yield_self{|lines| lines.map{|line| line.split(/\s+/) } }
     .yield_self{|rows|
-        columns = []
-        rows.each_with_index{|row, y|
-            row.each_with_index{|str, x|
-                columns[x] ||= []
+        columns = Array.new(rows[0].length){ [] }
+        rows.each_with_index do |row, y|
+            row.each_with_index do |str, x|
                 columns[x][y] = str
-            }
-        }
+            end
+        end
         columns
     }
     .map{|column| [ column[0..-2].map(&:to_i), column[-1].to_sym ] }
