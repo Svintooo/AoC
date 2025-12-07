@@ -8,12 +8,13 @@ else
     ["input", "input.txt", "input.example.txt"]
         .find{|file| File.readable?(file) }  # Select first match
         .yield_self{|file| IO.read(file) }
-end.yield_self do |input|
+end
+.yield_self do |input|
     part1 = input
         .each_line(chomp:true)           #  " 12 345 67  \n..."  => [" 12 345 67  ", ...]
         .lazy
         .map(&:strip)                    # [" 12 345 67  ", ...] => ["12 345 67", ...]
-        .map{|line| line.split(/\s+/) }  # ["12 345 67", ...]    => [["12","345","67"], ...]
+        .map{|line| line.split(/\s+/) }  # ["12 345 67", ...]    => [["12", "345", "67"], ...]
         .yield_self{|rows|
             length = rows.first.length
             columns = Array.new(length){ [] }
@@ -37,15 +38,15 @@ end.yield_self do |input|
         .yield_self{|rows|
             length = rows.first.length
             columns = Array.new(length){ [] }
-            rows.each_with_index do |row, y|            # [["1", "2", " "], => [[" ", "6", " "],
-                row.each_with_index do |str, x|         #  ["4", "5", "6"],     ["2", "5", " "],
+            rows.each_with_index do |row, y|            # [["1", "2", " "],    [[" ", "6", " "],
+                row.each_with_index do |str, x|         #  ["4", "5", "6"], =>  ["2", "5", " "],
                     columns[length - 1 - x][y] = str    #  ["+", " ", " "]]     ["1", "4", "+"]]
                 end
             end
             columns
         }
         .lazy
-        .map{|column| column.join("").strip }  # [["2", "5", "*", " "],[" ", " ", " "], ...] => ["25*", "", ...]
+        .map{|column| column.join("").strip }  # [["2", "5", "*", " "], [" ", " ", " "], ...] => ["25*", "", ...]
         .chain([""])                           # [..., "14+"] => [..., "14+", ""]
         .slice_after{|column| column == "" }   # [..., "25*", "", "73", "14+", ""] => [[..., "25*", ""], ["73", "14+", ""]]
         .map{|column| column[0..-2] }          # ["73", "14+", ""] => ["73", "14+"]
